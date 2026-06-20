@@ -165,7 +165,7 @@
             color: var(--text-dark);
         }
 
-        /* PANEL RUANG GURU (Interaktif & Hidup) */
+        /* PANEL RUANG GURU */
         .panel-section {
             background: rgba(255, 255, 255, 0.7);
             border-radius: 20px;
@@ -301,7 +301,7 @@
 
         .footer-document .signature-space { height: 70px; }
 
-        /* ==================== WINDOW POP-UP PENGATURAN DATA ==================== */
+        /* WINDOW POP-UP PENGATURAN DATA */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -404,7 +404,6 @@
         }
         .save-btn:hover { background: #b45309; }
 
-        /* TOMBOL MENUJU DASHBOARD */
         .dashboard-btn {
             display: flex;
             align-items: center;
@@ -447,7 +446,6 @@
         }
         .toast-notif.show { bottom: 20px; }
 
-        /* RESPONSIVE LAYOUT UNTUK HP DAN LAPTOP */
         @media (max-width: 768px) {
             .container { padding: 20px 15px; border-radius: 16px; }
             .kop-surat { flex-direction: column; gap: 12px; }
@@ -508,22 +506,22 @@
             </div>
 
             <div class="panel-grid">
-                <div class="panel-item" onclick="bukaFitur('Capaian Pembelajaran (CP) & ATP')">
+                <div class="panel-item" onclick="bukaFitur('tampilkan-kaldik.html', 'Capaian Pembelajaran (CP) & ATP')">
                     <div class="panel-icon"><i class="fa-solid fa-layer-group"></i></div>
                     <h5>CP & ATP</h5>
                     <p>Kurikulum Merdeka</p>
                 </div>
-                <div class="panel-item" onclick="bukaFitur('Modul Ajar / RPP Plus')">
+                <div class="panel-item" onclick="bukaFitur('tampilkan-modul.html', 'Modul Ajar / RPP Plus')">
                     <div class="panel-icon"><i class="fa-solid fa-folder-open"></i></div>
                     <h5>Modul Ajar</h5>
                     <p>Edisi Administrasi 2026</p>
                 </div>
-                <div class="panel-item" onclick="bukaFitur('KKTP / Kriteria Ketuntasan')">
+                <div class="panel-item" onclick="bukaFitur('tampilkan-kktp.html', 'KKTP / Kriteria Ketuntasan')">
                     <div class="panel-icon"><i class="fa-solid fa-chart-bar"></i></div>
                     <h5>KKTP / KKM</h5>
                     <p>Ketuntasan Pembelajaran</p>
                 </div>
-                <div class="panel-item" onclick="bukaFitur('Jurnal Mengajar Harian')">
+                <div class="panel-item" onclick="bukaFitur('tampilkan-jurnal.html', 'Jurnal Mengajar Harian')">
                     <div class="panel-icon"><i class="fa-solid fa-pen-to-square"></i></div>
                     <h5>Jurnal Harian</h5>
                     <p>Presensi & Aktivitas</p>
@@ -590,7 +588,6 @@
     </div>
 
     <script>
-        // Fungsi Membuka/Menutup Modal Panel Pengaturan
         function toggleModal(show) {
             const modal = document.getElementById('modalAdmin');
             if(show) {
@@ -600,16 +597,13 @@
             }
         }
 
-        // Menutup modal jika area luar panel diklik
         function closeOverlay(e) {
             if(e.target.id === 'modalAdmin') {
                 toggleModal(false);
             }
         }
 
-        // Fungsi Menyimpan Data dari Panel Rahasia ke Tampilan Utama
         function simpanDanTerapkan() {
-            // Sinkronisasi data ke tampilan utama
             document.getElementById('display-mapel').innerText = document.getElementById('input-mapel').value;
             document.getElementById('display-guru').innerText = document.getElementById('input-guru').value;
             document.getElementById('display-guru-footer').innerText = document.getElementById('input-guru').value;
@@ -618,19 +612,18 @@
             document.getElementById('display-kota').innerText = document.getElementById('input-kota').value;
             document.getElementById('display-tahun').innerText = document.getElementById('input-tahun').value;
 
-            // Tutup Modal Popup
             toggleModal(false);
-
-            // Tampilkan Notifikasi sukses
             tampilkanToast("Sistem Berhasil Diperbarui!");
         }
 
-        // Efek Interaksi Hidup pada Menu Ruang Guru ketika diklik
-        function bukaFitur(namaFitur) {
+        // FUNGSI DIUBAH AGAR MENGARAHKAN HALAMAN KE URL TUJUAN
+        function bukaFitur(urlTujuan, namaFitur) {
             tampilkanToast("Mengakses Berkas: " + namaFitur);
+            setTimeout(() => {
+                window.location.href = urlTujuan;
+            }, 800); // Memberikan jeda 0.8 detik agar animasi toast sempat terlihat
         }
 
-        // Fungsi Helper memunculkan Toast Notifikasi
         function tampilkanToast(pesan) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-text').innerText = pesan;
