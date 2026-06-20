@@ -1,638 +1,237 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Input Administrasi Perangkat Guru</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrasi Belajar Guru - SMAN 15</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root {
-            --bg-page: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --card-bg: #1e293b;
-            --accent-color: #3a86ff;
-            --accent-success: #10b981;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background: var(--bg-page);
-            background-attachment: fixed;
-            color: var(--text-main);
-            min-height: 100vh;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .form-container {
-            width: 100%;
-            max-width: 650px;
-            background: var(--card-bg);
-            border: 1px solid #334155;
-            border-radius: 24px;
-            padding: 35px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            position: relative;
-            margin-bottom: 30px;
-        }
-
-        .form-header {
-            margin-bottom: 30px;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 15px;
-            position: relative;
-        }
-
-        .form-header h2 {
-            font-size: 22px;
-            font-weight: 800;
-            background: linear-gradient(45deg, #38bdf8, var(--accent-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .form-header p {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px 20px;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-
-        .control-group.full-width {
-            grid-column: span 2;
-        }
-
-        .control-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #d1d5db;
-        }
-
-        .control-group select, 
-        .control-group input {
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid #475569;
-            background: #1e293b;
-            color: white;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s;
-            width: 100%;
-        }
-
-        .control-group select:focus, 
-        .control-group input:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
-        }
-
-        .control-group select option {
-            background: #1e293b;
-            color: white;
-        }
-
-        .action-panels {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            grid-column: span 2;
-        }
-
-        .submit-btn {
-            flex: 2;
-            background: linear-gradient(135deg, var(--accent-color), #0284c7);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(58, 134, 255, 0.3);
-        }
-
-        .back-dashboard-btn {
-            flex: 1;
-            background: #334155;
-            color: white;
-            border: 1px solid #475569;
-            padding: 14px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            text-decoration: none;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s;
-        }
-
-        .back-dashboard-btn:hover {
-            background: #475569;
-            color: #fff;
-        }
-
-        .submit-btn:disabled {
-            background: #475569;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .back-nav {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 13px;
-            margin-bottom: 20px;
-            transition: color 0.3s;
-            align-self: flex-start;
-            max-width: 650px;
-            width: 100%;
-        }
-
-        .back-nav:hover {
-            color: var(--text-main);
-        }
-
-        /* STYLE LIVE RIWAYAT TABEL DI BAWAH */
-        .riwayat-container {
-            width: 100%;
-            max-width: 1100px;
-            background: var(--card-bg);
-            border: 1px solid #334155;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .riwayat-header {
-            margin-bottom: 15px;
-        }
-
-        .riwayat-header h3 {
-            font-size: 18px;
-            color: #38bdf8;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .riwayat-header p {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            text-align: left;
-        }
-
-        th {
-            background: #0f172a;
-            color: #38bdf8;
-            padding: 12px 10px;
-            font-weight: 700;
-            border-bottom: 2px solid #334155;
-            white-space: nowrap;
-        }
-
-        td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #334155;
-            color: #e2e8f0;
-            white-space: nowrap;
-        }
-
-        tr:hover td {
-            background: rgba(56, 189, 248, 0.05);
-        }
-
-        .btn-edit {
-            background: #eab308;
-            color: #0f172a;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 11px;
-            cursor: pointer;
-        }
-
-        .link-icon {
-            color: #3a86ff;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .link-icon:hover { text-decoration: underline; }
-
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 10000;
-        }
-
-        .popup-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .popup-box {
-            background: #1e293b;
-            border: 1px solid #334155;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 450px;
-            width: 90%;
-            transform: scale(0.8);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .popup-overlay.show .popup-box {
-            transform: scale(1);
-        }
-
-        .popup-icon {
-            font-size: 50px;
-            margin-bottom: 15px;
-        }
-
-        .popup-icon.success { color: var(--accent-success); }
-        .popup-icon.loading { color: var(--accent-color); }
-
-        .popup-box h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .popup-box p {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.5;
-            white-space: pre-line;
-        }
-
-        .close-popup-btn {
-            background: #334155;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: background 0.3s;
-        }
-        .close-popup-btn:hover { background: #475569; }
-
-        @media (max-width: 600px) {
-            .form-grid { grid-template-columns: 1fr; }
-            .control-group.full-width { grid-column: span 1; }
-            .action-panels { flex-direction: column; grid-column: span 1; }
-        }
+        :root { --primary: #1e3a8a; --bg: #f1f5f9; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); padding: 30px 15px; }
+        .card { background: white; max-width: 750px; margin: 0 auto 30px auto; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px dashed #e2e8f0; padding-bottom: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .input-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+        .input-group label { font-size: 13px; font-weight: 700; color: #334155; }
+        .input-group input, .input-group select { padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; }
+        .link-section { background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
+        .canvas-wrap { position: relative; width: 100%; height: 140px; background: white; border: 2px dashed #94a3b8; border-radius: 8px; }
+        canvas { position: absolute; width:100%; height:100%; left:0; top:0; cursor: crosshair; }
+        .btn-submit { background: var(--primary); color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        
+        .history-card { background: white; max-width: 750px; margin: 0 auto; padding: 25px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .history-title { color: var(--primary); font-weight: 800; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .history-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 13px; }
+        .badge { padding: 4px 8px; font-size: 11px; font-weight: bold; border-radius: 4px; text-transform: uppercase; }
+        .menunggu { background: #fef3c7; color: #d97706; }
+        .disetujui { background: #dbeafe; color: #2563eb; }
+        .terbit { background: #d1fae5; color: #059669; }
+        
+        .link-row { display: flex; align-items: center; justify-content: space-between; background: white; padding: 8px 12px; border-radius: 6px; border: 1px solid #edf2f7; font-size: 12px; margin-bottom: 5px; }
+        .btn-edit { background: #e2e8f0; color: #475569; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .btn-edit:hover { background: #cbd5e1; }
     </style>
 </head>
 <body>
 
-    <a href="dashbor.html" class="back-nav">
-        <i class="fa-solid fa-arrow-left"></i> Langsung ke Dashboard
-    </a>
+<div class="card">
+    <div class="header">
+        <h2>E-Administrasi Belajar Guru</h2>
+        <p style="color: #64748b; font-size: 13px;">SMAN 15 Maluku Tengah</p>
+    </div>
 
-    <div class="form-container">
-        <header class="form-header">
-            <h2><i class="fa-solid fa-folder-plus"></i> Input Administrasi Perangkat</h2>
-            <p>Data identitas terikat dinamis dari Sheet1. Lampiran otomatis masuk sesuai sheet guru terkait.</p>
-        </header>
-
-        <form id="kaldikForm" onsubmit="kirimDataKeSpreadsheet(event)">
-            <div class="form-grid">
-                
-                <div class="control-group">
-                    <label for="namaGuru">Nama Guru</label>
-                    <select id="namaGuru" onchange="muatRiwayatPerangkatGuru()" required>
-                        <option value="" disabled selected>Memuat nama guru...</option>
-                    </select>
-                </div>
-
-                <div class="control-group">
-                    <label for="mataPelajaran">Mata Pelajaran</label>
-                    <select id="mataPelajaran" required>
-                        <option value="" disabled selected>Pilih Mapel...</option>
-                    </select>
-                </div>
-
-                <div class="control-group full-width">
-                    <label for="kelas">Kelas</label>
-                    <select id="kelas" required>
-                        <option value="" disabled selected>Pilih Kelas...</option>
-                    </select>
-                </div>
-
-                <div class="control-group full-width">
-                    <label for="linkKaldik"><i class="fa-solid fa-link"></i> Link Kalender Pendidikan (Drive PDF)</label>
-                    <input type="url" id="linkKaldik" placeholder="https://drive.google.com/file/d/...">
-                </div>
-
-                <div class="control-group full-width">
-                    <label for="linkJadwal"><i class="fa-solid fa-link"></i> Link Jadwal Mengajar (Drive PDF)</label>
-                    <input type="url" id="linkJadwal" placeholder="https://drive.google.com/file/d/...">
-                </div>
-
-                <div class="control-group full-width">
-                    <label for="linkAtp"><i class="fa-solid fa-link"></i> Link Alur Tujuan Pembelajaran / ATP (Drive PDF)</label>
-                    <input type="url" id="linkAtp" placeholder="https://drive.google.com/file/d/...">
-                </div>
-
-                <div class="control-group full-width">
-                    <label for="linkSilabus"><i class="fa-solid fa-link"></i> Link Silabus (Drive PDF)</label>
-                    <input type="url" id="linkSilabus" placeholder="https://drive.google.com/file/d/...">
-                </div>
-
-                <div class="control-group full-width">
-                    <label for="linkProta"><i class="fa-solid fa-link"></i> Link Program Tahunan / Prota (Drive PDF)</label>
-                    <input type="url" id="linkProta" placeholder="https://drive.google.com/file/d/...">
-                </div>
-
-                <div class="control-group full-width">
-                    <label for="linkProsem"><i class="fa-solid fa-link"></i> Link Program Semester / Promes (Drive PDF)</label>
-                    <input type="url" id="linkProsem" placeholder="https://drive.google.com/file/d/...">
-                </div>
-
-                <div class="action-panels">
-                    <a href="dashbor.html" class="back-dashboard-btn">
-                        <i class="fa-solid fa-gauge-high"></i> Dashboard
-                    </a>
-                    <button type="submit" id="btnSimpan" class="submit-btn" disabled>
-                        <i class="fa-solid fa-paper-plane"></i> Kirim Perangkat
-                    </button>
-                </div>
-
+    <form id="formAdmin" onsubmit="kirimSemuaData(event)">
+        <div class="grid-3">
+            <div class="input-group">
+                <label>Nama Lengkap Guru</label>
+                <select id="namaGuru" onchange="cekRiwayatGuru()" required><option value="">Memuat nama...</option></select>
             </div>
-        </form>
-    </div>
-
-    <div class="riwayat-container">
-        <div class="riwayat-header">
-            <h3><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Unggahan Perangkat</h3>
-            <p id="txtInfoRiwayat">Silakan pilih nama guru di atas untuk melihat riwayat data perangkat.</p>
+            <div class="input-group">
+                <label>Mata Pelajaran</label>
+                <select id="mapel" required><option value="">Memuat mapel...</option></select>
+            </div>
+            <div class="input-group">
+                <label>Kelas</label>
+                <select id="kelas" required><option value="">Memuat kelas...</option></select>
+            </div>
         </div>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Aksi</th>
-                        <th>Mata Pelajaran</th>
-                        <th>Kelas</th>
-                        <th>Kaldik</th>
-                        <th>Jadwal</th>
-                        <th>ATP</th>
-                        <th>Silabus</th>
-                        <th>Prota</th>
-                        <th>Prosem</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelRiwayatBody">
-                    <tr>
-                        <td colspan="9" style="text-align: center; color: #94a3b8;">Belum ada nama guru yang dipilih.</td>
-                    </tr>
-                </tbody>
-            </table>
+
+        <div class="link-section">
+            <h4 style="margin-bottom: 15px; color: var(--primary);"><i class="fa-solid fa-folder-open"></i> Input Link Google Doc Perangkat</h4>
+            <div class="input-group"><label>1. Kalender Pendidikan</label><input type="url" id="link1" placeholder="https://docs.google.com/..." required></div>
+            <div class="input-group"><label>2. Alokasi Minggu Efektif</label><input type="url" id="link2" placeholder="https://docs.google.com/..." required></div>
+            <div class="input-group"><label>3. Jadwal Mengajar</label><input type="url" id="link3" placeholder="https://docs.google.com/..." required></div>
+            <div class="input-group"><label>4. CP dan ATP</label><input type="url" id="link4" placeholder="https://docs.google.com/..." required></div>
+            <div class="input-group"><label>5. Program Tahunan</label><input type="url" id="link5" placeholder="https://docs.google.com/..." required></div>
+            <div class="input-group"><label>6. Program Semester</label><input type="url" id="link6" placeholder="https://docs.google.com/..." required></div>
+            <div class="input-group"><label>7. RPP / Modul Ajar</label><input type="url" id="link7" placeholder="https://docs.google.com/..." required></div>
+            <div class="input-group"><label>8. KKTP</label><input type="url" id="link8" placeholder="https://docs.google.com/..." required></div>
+            <div class="input-group"><label>9. Kisi-Kisi Soal</label><input type="url" id="link9" placeholder="https://docs.google.com/..." required></div>
+            <div class="input-group"><label>10. Jurnal Guru</label><input type="url" id="link10" placeholder="https://docs.google.com/..." required></div>
+            <div class="input-group"><label>11. Daftar Nilai & Absensi</label><input type="url" id="link11" placeholder="https://docs.google.com/..." required></div>
         </div>
-    </div>
 
-    <div class="popup-overlay" id="statusPopup">
-        <div class="popup-box">
-            <div id="popupIcon" class="popup-icon"></div>
-            <h3 id="popupTitle">Memproses Data</h3>
-            <p id="popupMessage">Mohon tunggu...</p>
-            <button id="popupCloseBtn" class="close-popup-btn" style="display: none;" onclick="tutupPopup()">OK</button>
+        <div class="input-group" style="margin-bottom: 25px;">
+            <label>Tanda Tangan Guru Pengampu (Gores Layar)</label>
+            <div class="canvas-wrap"><canvas id="canvasGuru"></canvas></div>
+            <button type="button" style="background:#ef4444; color:white; border:none; padding:4px 8px; font-size:11px; border-radius:4px; margin-top:5px; width:80px;" onclick="hapusTTD()">Hapus TTD</button>
         </div>
-    </div>
 
-    <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUqDFah-9tizVmXWkR2MOjjSXT8zZdwZEUs_WqyD9vzjXEQXUydgaNJf58EFQPmpZF/exec";
-        let cacheRiwayatGuru = [];
+        <button type="submit" class="btn-submit"><i class="fa-solid fa-cloud-arrow-up"></i> Kirim ke Kurikulum</button>
+        <p id="loading" style="display:none; text-align:center; margin-top:10px; font-weight:bold; color:#2563eb;"><i class="fa-solid fa-spinner fa-spin"></i> Memproses data...</p>
+    </form>
+</div>
 
-        // LOAD DATA DROPDOWN SECARA LIVE DARI SERVER APPS SCRIPT
-        document.addEventListener("DOMContentLoaded", function() {
-            const urlLoad = `${WEB_APP_URL}?aksi=loadDropdown`;
-            
-            fetch(urlLoad)
-            .then(response => response.json())
-            .then(data => {
-                if (data && typeof data === 'object') {
-                    document.getElementById('namaGuru').innerHTML = '<option value="" disabled selected>-- Pilih Nama Guru --</option>' + 
-                        data.guru.map(g => `<option value="${g}">${g}</option>`).join('');
-                    
-                    document.getElementById('mataPelajaran').innerHTML = '<option value="" disabled selected>-- Pilih Mapel --</option>' + 
-                        data.mapel.map(m => `<option value="${m}">${m}</option>`).join('');
-                    
-                    document.getElementById('kelas').innerHTML = '<option value="" disabled selected>-- Pilih Kelas --</option>' + 
-                        data.kelas.map(k => `<option value="${k}">${k}</option>`).join('');
+<div class="history-card">
+    <h3 class="history-title"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Pemasukan Berkas Anda</h3>
+    <div id="statusMencari" style="font-size: 13px; color: #64748b; text-align:center; padding:10px;">Silakan pilih nama Anda untuk memuat riwayat berkas.</div>
+    <div id="kontenRiwayat"></div>
+</div>
 
-                    document.getElementById('btnSimpan').disabled = false;
-                }
-            }).catch(err => {
-                console.error("Gagal memuat dropdown:", err);
-                document.getElementById('namaGuru').innerHTML = '<option value="" disabled>Gagal memuat data dropdown</option>';
-            });
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgSyvm6G-STS2t6KwoC0Z7tXu6Xfu8wAyE5FkJrQ475mPD3KPDklHjd7VWyjZsFMXQ/exec";
+    const canvas = document.getElementById('canvasGuru');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    let dataSeluruhGuru = [];
+
+    function muatDropdown() {
+        fetch(SCRIPT_URL).then(res => res.json()).then(res => {
+            isiOpsi('namaGuru', res.guru, "Pilih Nama Anda");
+            isiOpsi('mapel', res.mapel, "Pilih Mata Pelajaran");
+            isiOpsi('kelas', res.kelas, "Pilih Kelas");
+            ambilSemuaRiwayat();
+        }).catch(() => alert("Gagal memuat data master dari Spreadsheet."));
+    }
+
+    function isiOpsi(idElemen, arrayData, placeholder) {
+        let el = document.getElementById(idElemen);
+        el.innerHTML = `<option value="">-- ${placeholder} --</option>`;
+        arrayData.forEach(item => { el.innerHTML += `<option value="${item}">${item}</option>`; });
+    }
+
+    function ambilSemuaRiwayat() {
+        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "ambilSemuaData" }) })
+        .then(res => res.json()).then(res => {
+            if(res.status === "success") { dataSeluruhGuru = res.data; cekRiwayatGuru(); }
         });
+    }
 
-        // FUNGSI MEMANGGIL RIWAYAT LIVE DI BAWAH FORM
-        function muatRiwayatPerangkatGuru() {
-            const guru = document.getElementById('namaGuru').value;
-            const tbody = document.getElementById('tabelRiwayatBody');
-            const infoText = document.getElementById('txtInfoRiwayat');
+    function cekRiwayatGuru() {
+        const namaDipilih = document.getElementById('namaGuru').value;
+        const wadah = document.getElementById('kontenRiwayat');
+        const info = document.getElementById('statusMencari');
+        
+        if(!namaDipilih) { wadah.innerHTML = ""; info.style.display = "block"; return; }
+        info.style.display = "none";
+        
+        const berkasGuru = dataSeluruhGuru.filter(d => d.namaGuru.trim() === namaDipilih.trim());
+        if(berkasGuru.length === 0) {
+            wadah.innerHTML = "<p style='font-size:13px; color:#64748b; text-align:center; padding:15px;'>Anda belum memiliki riwayat pengiriman berkas.</p>";
+            return;
+        }
 
-            if (!guru) return;
+        let html = "";
+        const namaPerangkat = [
+            "1. Kalender Pendidikan", "2. Alokasi Minggu Efektif", "3. Jadwal Mengajar", 
+            "4. CP dan ATP", "5. Program Tahunan", "6. Program Semester", 
+            "7. RPP / Modul Ajar", "8. KKTP", "9. Kisi-Kisi Soal", 
+            "10. Jurnal Guru", "11. Daftar Nilai & Absensi"
+        ];
 
-            infoText.innerText = `Memuat daftar riwayat perangkat untuk: ${guru}...`;
-            tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #3a86ff;"><i class="fa-solid fa-spinner fa-spin"></i> Sedang mengambil data riwayat...</td></tr>`;
+        berkasGuru.forEach(d => {
+            let cls = d.status === "Diterbitkan" ? "terbit" : (d.status === "Disetujui Kurikulum" ? "disetujui" : "menunggu");
+            html += `
+                <div class="history-item" style="border-left: 5px solid ${d.status === 'Diterbitkan' ? '#10b981' : (d.status === 'Disetujui Kurikulum' ? '#3b82f6' : '#f59e0b')};">
+                    <div class="history-header">
+                        <div><strong>${d.mapel} (${d.kelas})</strong></div>
+                        <div><span class="badge ${cls}">${d.status}</span></div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+            `;
 
-            const urlRiwayat = `${WEB_APP_URL}?aksi=ambilRiwayatGuru&namaGuru=${encodeURIComponent(guru)}`;
-
-            fetch(urlRiwayat)
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success" && data.rows && data.rows.length > 0) {
-                    cacheRiwayatGuru = data.rows;
-                    infoText.innerText = `Menampilkan ${data.rows.length} records perangkat untuk Guru: ${guru}`;
-                    
-                    tbody.innerHTML = data.rows.map((row, index) => {
-                        return `
-                            <tr>
-                                <td>
-                                    <button type="button" class="btn-edit" onclick="pindahkanKeFormEdit(${index})">
-                                        <i class="fa-solid fa-pen-to-square"></i> Edit
-                                    </button>
-                                </td>
-                                <td><b>${row.mapel}</b></td>
-                                <td><span style="color:#38bdf8">${row.kelas}</span></td>
-                                <td>${buatLinkIcon(row.kaldik)}</td>
-                                <td>${buatLinkIcon(row.jadwal)}</td>
-                                <td>${buatLinkIcon(row.atp)}</td>
-                                <td>${buatLinkIcon(row.silabus)}</td>
-                                <td>${buatLinkIcon(row.prota)}</td>
-                                <td>${buatLinkIcon(row.prosem)}</td>
-                            </tr>
-                        `;
-                    }).join('');
-                } else {
-                    cacheRiwayatGuru = [];
-                    infoText.innerText = `Belum ada riwayat berkas terunggah untuk Guru: ${guru}`;
-                    tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #94a3b8;">Belum ada data riwayat di sheet guru ini. Silakan lakukan input pertama kali.</td></tr>`;
+            for(let i = 1; i <= 11; i++) {
+                let urlLink = d["link" + i];
+                let kolomKe = i + 4; // Kolom 5 di excel (E) adalah Link 1, dst.
+                if(urlLink) {
+                    html += `
+                        <div class="link-row">
+                            <span style="font-weight:600; color:#475569;">${namaPerangkat[i-1]}</span>
+                            <div style="display:flex; gap:5px;">
+                                <a href="${urlLink}" target="_blank" style="background:#3b82f6; color:white; padding:3px 8px; border-radius:4px; text-decoration:none; font-size:11px;"><i class="fa-solid fa-eye"></i> Cek</a>
+                                <button type="button" class="btn-edit" onclick="aksiEditLink('${d.namaGuru}', ${d.idBaris}, ${kolomKe}, '${urlLink}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                            </div>
+                        </div>
+                    `;
                 }
-            }).catch(err => {
-                console.error("Riwayat Fetch Error:", err);
-                tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #ef4444;">Gagal mengambil data riwayat berkas.</td></tr>`;
-            });
+            }
+            html += `</div></div>`;
+        });
+        wadah.innerHTML = html;
+    }
+
+    function aksiEditLink(nama, idBaris, kolomKe, urlLama) {
+        let urlBaru = prompt("Masukkan Link Google Doc Baru untuk merevisi berkas ini:", urlLama);
+        if(urlBaru && urlBaru.trim() !== "" && urlBaru !== urlLama) {
+            document.getElementById('loading').style.display = 'block';
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "updateLinkSpesifik", namaGuru: nama, idBaris: idBaris, kolom: kolomKe, linkBaru: urlBaru })
+            }).then(() => {
+                alert("Tautan berkas sukses diperbarui!");
+                ambilSemuaRiwayat();
+                document.getElementById('loading').style.display = 'none';
+            }).catch(() => { alert("Gagal mengupdate"); document.getElementById('loading').style.display = 'none'; });
         }
+    }
 
-        function buatLinkIcon(url) {
-            return url && url.toString().trim().startsWith('http') ? `<a href="${url}" target="_blank" class="link-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i> Buka</a>` : `<span style="color: #64748b">-</span>`;
-        }
+    function initCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.strokeStyle = "#000000"; }
+    window.addEventListener('resize', initCanvas); setTimeout(initCanvas, 500);
+    canvas.addEventListener('touchstart', (e) => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); });
+    canvas.addEventListener('touchmove', (e) => { if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); });
+    canvas.addEventListener('touchend', () => drawing = false);
+    canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+    canvas.addEventListener('mousemove', (e) => { if(!drawing) return; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); });
+    canvas.addEventListener('mouseup', () => drawing = false);
+    function getPos(e) { const r = canvas.getBoundingClientRect(); return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top }; }
+    function hapusTTD() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        // FUNGSI EDIT DATA TABEL UNTUK DIKEMBALIKAN KE FORM
-        function pindahkanKeFormEdit(index) {
-            const dataRow = cacheRiwayatGuru[index];
-            
-            document.getElementById('mataPelajaran').value = dataRow.mapel;
-            document.getElementById('kelas').value = dataRow.kelas;
-            document.getElementById('linkKaldik').value = dataRow.kaldik;
-            document.getElementById('linkJadwal').value = dataRow.jadwal;
-            document.getElementById('linkAtp').value = dataRow.atp;
-            document.getElementById('linkSilabus').value = dataRow.silabus;
-            document.getElementById('linkProta').value = dataRow.prota;
-            document.getElementById('linkProsem').value = dataRow.prosem;
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // KIRIM DATA PROSES POST
-        function kirimDataKeSpreadsheet(e) {
-            e.preventDefault();
-            const btnSimpan = document.getElementById('btnSimpan');
-            const popup = document.getElementById('statusPopup');
-            const pIcon = document.getElementById('popupIcon');
-            const pTitle = document.getElementById('popupTitle');
-            const pMessage = document.getElementById('popupMessage');
-            const pCloseBtn = document.getElementById('popupCloseBtn');
-
-            pIcon.className = "popup-icon loading";
-            pIcon.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
-            pTitle.innerText = "Sinkronisasi Server...";
-            pMessage.innerText = "Memproses validasi baris unik...";
-            pCloseBtn.style.display = "none";
-            popup.classList.add('show');
-            btnSimpan.disabled = true;
-
-            const formData = new URLSearchParams();
-            formData.append('aksi', 'simpanPerangkatLengkap');
-            formData.append('namaGuru', document.getElementById('namaGuru').value);
-            formData.append('mataPelajaran', document.getElementById('mataPelajaran').value);
-            formData.append('kelas', document.getElementById('kelas').value);
-            formData.append('linkKaldik', document.getElementById('linkKaldik').value);
-            formData.append('linkJadwal', document.getElementById('linkJadwal').value);
-            formData.append('linkAtp', document.getElementById('linkAtp').value);
-            formData.append('linkSilabus', document.getElementById('linkSilabus').value);
-            formData.append('linkProta', document.getElementById('linkProta').value);
-            formData.append('linkProsem', document.getElementById('linkProsem').value);
-
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: formData,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success") {
-                    pIcon.className = "popup-icon success";
-                    pIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-                    pTitle.innerText = "Tersimpan!";
-                    pMessage.innerText = data.info;
-                    pCloseBtn.style.display = "inline-block";
-                    
-                    // Reset input teks link saja
-                    document.getElementById('linkKaldik').value = "";
-                    document.getElementById('linkJadwal').value = "";
-                    document.getElementById('linkAtp').value = "";
-                    document.getElementById('linkSilabus').value = "";
-                    document.getElementById('linkProta').value = "";
-                    document.getElementById('linkProsem').value = "";
-                    
-                    muatRiwayatPerangkatGuru(); // Segarkan riwayat
-                } else { throw new Error(data.message); }
-            })
-            .catch(error => {
-                pIcon.className = "popup-icon"; pIcon.innerHTML = '<i class="fa-solid fa-circle-xmark" style="color:#ef4444;"></i>';
-                pTitle.innerText = "Gagal Simpan"; pMessage.innerText = error.message;
-                pCloseBtn.style.display = "inline-block";
-            }).finally(() => { btnSimpan.disabled = false; });
-        }
-
-        function tutupPopup() { document.getElementById('statusPopup').classList.remove('show'); }
-    </script>
+    function kirimSemuaData(e) {
+        e.preventDefault();
+        document.getElementById('loading').style.display = 'block';
+        const payload = {
+            action: "kirimAdministrasi",
+            namaGuru: document.getElementById('namaGuru').value,
+            mapel: document.getElementById('mapel').value,
+            kelas: document.getElementById('kelas').value,
+            link1: document.getElementById('link1').value,
+            link2: document.getElementById('link2').value,
+            link3: document.getElementById('link3').value,
+            link4: document.getElementById('link4').value,
+            link5: document.getElementById('link5').value,
+            link6: document.getElementById('link6').value,
+            link7: document.getElementById('link7').value,
+            link8: document.getElementById('link8').value,
+            link9: document.getElementById('link9').value,
+            link10: document.getElementById('link10').value,
+            link11: document.getElementById('link11').value,
+            ttdGuru: canvas.toDataURL()
+        };
+        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) })
+        .then(() => {
+            alert("Seluruh Perangkat Administrasi Berhasil Dikirim!");
+            document.getElementById('formAdmin').reset(); hapusTTD();
+            ambilSemuaRiwayat();
+            document.getElementById('loading').style.display = 'none';
+        }).catch(() => { alert("Pengiriman gagal"); document.getElementById('loading').style.display = 'none'; });
+    }
+    window.onload = muatDropdown;
+</script>
 </body>
 </html>
