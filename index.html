@@ -526,6 +526,12 @@
                     <h5>Jurnal Harian</h5>
                     <p>Presensi & Aktivitas</p>
                 </div>
+
+                <div class="panel-item" onclick="bukaDashboardKurikulum()" style="background-color: #f0fdf4; border: 1px solid #bbf7d0;">
+                    <div class="panel-icon" style="color: #16a34a;"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h5 style="color: #16a34a;">Verifikasi Perangkat</h5>
+                    <p>Akses Kurikulum (🔒)</p>
+                </div>
                 <div class="panel-item setting-item" onclick="toggleModal(true)">
                     <div class="panel-icon"><i class="fa-solid fa-sliders"></i></div>
                     <h5>Ubah Data</h5>
@@ -588,6 +594,26 @@
     </div>
 
     <script>
+        function bukaDashboardKurikulum() {
+        // Pengaturan kata sandi / kunci pembuka panel
+        var passwordBenar = "kurikulum15"; 
+        
+        var inputPassword = prompt("Masukkan Kunci Pembuka Panel Kurikulum:");
+        
+        if (inputPassword === null) {
+            return; // Jika menekan tombol Batal / Cancel
+        }
+        
+        if (inputPassword === passwordBenar) {
+            alert("🔓 Akses Diterima! Membuka Dashboard Kurikulum...");
+            // Mengarahkan ke file dashboard-kurikulum.html
+            window.location.href = "dashboard-kurikulum.html";
+        } else {
+            alert("❌ Kunci salah! Anda tidak memiliki otoritas untuk membuka panel ini.");
+        }
+        }
+
+
         function toggleModal(show) {
             const modal = document.getElementById('modalAdmin');
             if(show) {
