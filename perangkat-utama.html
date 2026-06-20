@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CP & ATP - Perangkat Utama</title>
+    <title>Sistem Input Administrasi Perangkat Guru</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-perangkat: linear-gradient(135deg, #0b1329 0%, #1c2541 100%); /* Tema Gelap Eksklusif */
-            --card-dark: #1c2541;
-            --card-hover: #293241;
-            --accent-blue: #3a86ff; /* Warna Aksen Biru Perangkat Utama */
+            --bg-page: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: #1e293b;
+            --accent-color: #3a86ff;
+            --accent-success: #10b981;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -24,7 +24,7 @@
         }
 
         body {
-            background: var(--bg-perangkat);
+            background: var(--bg-page);
             background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
@@ -32,173 +32,607 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
         }
 
-        .perangkat-container {
+        .form-container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 650px;
+            background: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            margin-bottom: 30px;
         }
 
-        /* Header Section */
-        .pu-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            border-bottom: 1px solid #3d5a80;
-            padding-bottom: 20px;
+        .form-header {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 15px;
+            position: relative;
         }
 
-        .pu-title h1 {
-            font-size: 26px;
+        .form-header h2 {
+            font-size: 22px;
             font-weight: 800;
-            letter-spacing: 0.5px;
-            background: linear-gradient(45deg, #3a86ff, #00b4d8);
+            background: linear-gradient(45deg, #38bdf8, var(--accent-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .pu-title p {
-            font-size: 13px;
+        .form-header p {
+            font-size: 12px;
             color: var(--text-muted);
             margin-top: 5px;
         }
 
-        /* Navigasi Kembali ke Dashboard */
-        .back-dashboard-btn {
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 20px;
+        }
+
+        .control-group {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
-            background: #293241;
-            color: white;
-            text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .control-group.full-width {
+            grid-column: span 2;
+        }
+
+        .control-group label {
             font-size: 13px;
             font-weight: 600;
-            border: 1px solid #3d5a80;
-            transition: all 0.3s ease;
+            color: #d1d5db;
+        }
+
+        .control-group select, 
+        .control-group input {
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #475569;
+            background: #1e293b;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .control-group select:focus, 
+        .control-group input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
+        }
+
+        .control-group select option {
+            background: #1e293b;
+            color: white;
+        }
+
+        .action-panels {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            grid-column: span 2;
+        }
+
+        .submit-btn {
+            flex: 2;
+            background: linear-gradient(135deg, var(--accent-color), #0284c7);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(58, 134, 255, 0.3);
+        }
+
+        .back-dashboard-btn {
+            flex: 1;
+            background: #334155;
+            color: white;
+            border: 1px solid #475569;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
         }
 
         .back-dashboard-btn:hover {
-            background: #3d5a80;
-            transform: translateX(-3px);
+            background: #475569;
+            color: #fff;
         }
 
-        /* GRID 3 PANEL UTAMA */
-        .pu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 25px;
+        .submit-btn:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        .pu-panel-item {
-            background: var(--card-dark);
-            border: 1px solid #3d5a80;
-            border-radius: 20px;
-            padding: 35px 25px;
-            text-align: center;
-            text-decoration: none;
-            color: var(--text-main);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            flex-direction: column;
+        .back-nav {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
+            gap: 6px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+            align-self: flex-start;
+            max-width: 650px;
+            width: 100%;
         }
 
-        /* Garis Efek Atas Berwarna Biru */
-        .pu-panel-item::before {
-            content: '';
-            position: absolute;
+        .back-nav:hover {
+            color: var(--text-main);
+        }
+
+        /* STYLE LIVE RIWAYAT TABEL DI BAWAH */
+        .riwayat-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .riwayat-header {
+            margin-bottom: 15px;
+        }
+
+        .riwayat-header h3 {
+            font-size: 18px;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .riwayat-header p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        th {
+            background: #0f172a;
+            color: #38bdf8;
+            padding: 12px 10px;
+            font-weight: 700;
+            border-bottom: 2px solid #334155;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #334155;
+            color: #e2e8f0;
+            white-space: nowrap;
+        }
+
+        tr:hover td {
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .btn-edit {
+            background: #eab308;
+            color: #0f172a;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .link-icon {
+            color: #3a86ff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .link-icon:hover { text-decoration: underline; }
+
+        .popup-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            background: var(--accent-blue);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 10000;
         }
 
-        .pu-panel-item:hover::before {
-            transform: scaleX(1);
+        .popup-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
         }
 
-        .pu-panel-item:hover {
-            transform: translateY(-8px);
-            background: var(--card-hover);
-            border-color: var(--accent-blue);
-            box-shadow: 0 15px 30px rgba(58, 134, 255, 0.2);
+        .popup-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .pu-icon {
-            font-size: 45px;
-            color: var(--accent-blue);
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
+        .popup-overlay.show .popup-box {
+            transform: scale(1);
         }
 
-        .pu-panel-item:hover .pu-icon {
-            transform: scale(1.15);
+        .popup-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
         }
 
-        .pu-panel-item h3 {
+        .popup-icon.success { color: var(--accent-success); }
+        .popup-icon.loading { color: var(--accent-color); }
+
+        .popup-box h3 {
             font-size: 18px;
             font-weight: 700;
             margin-bottom: 10px;
         }
 
-        .pu-panel-item p {
-            font-size: 12px;
+        .popup-box p {
+            font-size: 13px;
             color: var(--text-muted);
             line-height: 1.5;
+            white-space: pre-line;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            body { padding: 20px 10px; }
-            .pu-header { flex-direction: column; gap: 15px; text-align: center; }
-            .pu-grid { grid-template-columns: 1fr; gap: 20px; }
+        .close-popup-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.3s;
+        }
+        .close-popup-btn:hover { background: #475569; }
+
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .control-group.full-width { grid-column: span 1; }
+            .action-panels { flex-direction: column; grid-column: span 1; }
         }
     </style>
 </head>
 <body>
 
-    <div class="perangkat-container">
-        <header class="pu-header">
-            <div class="pu-title">
-                <h1>Sistem Administrasi CP & ATP</h1>
-                <p><i class="fa-solid fa-layer-group"></i> Pengisian komponen utama Kurikulum Merdeka</p>
-            </div>
-            <a href="dashbor.html" class="back-dashboard-btn">
-                <i class="fa-solid fa-gauge-high"></i> Kembali ke Dashboard
-            </a>
+    <a href="dashbor.html" class="back-nav">
+        <i class="fa-solid fa-arrow-left"></i> Langsung ke Dashboard
+    </a>
+
+    <div class="form-container">
+        <header class="form-header">
+            <h2><i class="fa-solid fa-folder-plus"></i> Input Administrasi Perangkat</h2>
+            <p>Data identitas terikat dinamis dari Sheet1. Lampiran otomatis masuk sesuai sheet guru terkait.</p>
         </header>
 
-        <main class="pu-grid">
-            
-            <a href="masukan-kaldik.html" class="pu-panel-item">
-                <div class="pu-icon"><i class="fa-solid fa-calendar-week"></i></div>
-                <h3>Kalender Pendidikan</h3>
-                <p>Membuka lembar pengisian berkas masukan-kaldik.html</p>
-            </a>
+        <form id="kaldikForm" onsubmit="kirimDataKeSpreadsheet(event)">
+            <div class="form-grid">
+                
+                <div class="control-group">
+                    <label for="namaGuru">Nama Guru</label>
+                    <select id="namaGuru" onchange="muatRiwayatPerangkatGuru()" required>
+                        <option value="" disabled selected>Memuat nama guru...</option>
+                    </select>
+                </div>
 
-            <a href="masukan-atp.html" class="pu-panel-item">
-                <div class="pu-icon"><i class="fa-solid fa-diagram-project"></i></div>
-                <h3>Alur Tujuan Pembelajaran (ATP)</h3>
-                <p>Membuka lembar pengisian berkas masukan-atp.html</p>
-            </a>
+                <div class="control-group">
+                    <label for="mataPelajaran">Mata Pelajaran</label>
+                    <select id="mataPelajaran" required>
+                        <option value="" disabled selected>Pilih Mapel...</option>
+                    </select>
+                </div>
 
-            <a href="masukan-prota.html" class="pu-panel-item">
-                <div class="pu-icon"><i class="fa-solid fa-business-time"></i></div>
-                <h3>Prota & Promes</h3>
-                <p>Membuka lembar pengisian berkas masukan-prota.html</p>
-            </a>
+                <div class="control-group full-width">
+                    <label for="kelas">Kelas</label>
+                    <select id="kelas" required>
+                        <option value="" disabled selected>Pilih Kelas...</option>
+                    </select>
+                </div>
 
-        </main>
+                <div class="control-group full-width">
+                    <label for="linkKaldik"><i class="fa-solid fa-link"></i> Link Kalender Pendidikan (Drive PDF)</label>
+                    <input type="url" id="linkKaldik" placeholder="https://drive.google.com/file/d/...">
+                </div>
+
+                <div class="control-group full-width">
+                    <label for="linkJadwal"><i class="fa-solid fa-link"></i> Link Jadwal Mengajar (Drive PDF)</label>
+                    <input type="url" id="linkJadwal" placeholder="https://drive.google.com/file/d/...">
+                </div>
+
+                <div class="control-group full-width">
+                    <label for="linkAtp"><i class="fa-solid fa-link"></i> Link Alur Tujuan Pembelajaran / ATP (Drive PDF)</label>
+                    <input type="url" id="linkAtp" placeholder="https://drive.google.com/file/d/...">
+                </div>
+
+                <div class="control-group full-width">
+                    <label for="linkSilabus"><i class="fa-solid fa-link"></i> Link Silabus (Drive PDF)</label>
+                    <input type="url" id="linkSilabus" placeholder="https://drive.google.com/file/d/...">
+                </div>
+
+                <div class="control-group full-width">
+                    <label for="linkProta"><i class="fa-solid fa-link"></i> Link Program Tahunan / Prota (Drive PDF)</label>
+                    <input type="url" id="linkProta" placeholder="https://drive.google.com/file/d/...">
+                </div>
+
+                <div class="control-group full-width">
+                    <label for="linkProsem"><i class="fa-solid fa-link"></i> Link Program Semester / Promes (Drive PDF)</label>
+                    <input type="url" id="linkProsem" placeholder="https://drive.google.com/file/d/...">
+                </div>
+
+                <div class="action-panels">
+                    <a href="dashbor.html" class="back-dashboard-btn">
+                        <i class="fa-solid fa-gauge-high"></i> Dashboard
+                    </a>
+                    <button type="submit" id="btnSimpan" class="submit-btn" disabled>
+                        <i class="fa-solid fa-paper-plane"></i> Kirim Perangkat
+                    </button>
+                </div>
+
+            </div>
+        </form>
     </div>
 
+    <div class="riwayat-container">
+        <div class="riwayat-header">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Unggahan Perangkat</h3>
+            <p id="txtInfoRiwayat">Silakan pilih nama guru di atas untuk melihat riwayat data perangkat.</p>
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aksi</th>
+                        <th>Mata Pelajaran</th>
+                        <th>Kelas</th>
+                        <th>Kaldik</th>
+                        <th>Jadwal</th>
+                        <th>ATP</th>
+                        <th>Silabus</th>
+                        <th>Prota</th>
+                        <th>Prosem</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelRiwayatBody">
+                    <tr>
+                        <td colspan="9" style="text-align: center; color: #94a3b8;">Belum ada nama guru yang dipilih.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="statusPopup">
+        <div class="popup-box">
+            <div id="popupIcon" class="popup-icon"></div>
+            <h3 id="popupTitle">Memproses Data</h3>
+            <p id="popupMessage">Mohon tunggu...</p>
+            <button id="popupCloseBtn" class="close-popup-btn" style="display: none;" onclick="tutupPopup()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUqDFah-9tizVmXWkR2MOjjSXT8zZdwZEUs_WqyD9vzjXEQXUydgaNJf58EFQPmpZF/exec";
+        let cacheRiwayatGuru = [];
+
+        // LOAD DATA DROPDOWN SECARA LIVE DARI SERVER APPS SCRIPT
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlLoad = `${WEB_APP_URL}?aksi=loadDropdown`;
+            
+            fetch(urlLoad)
+            .then(response => response.json())
+            .then(data => {
+                if (data && typeof data === 'object') {
+                    document.getElementById('namaGuru').innerHTML = '<option value="" disabled selected>-- Pilih Nama Guru --</option>' + 
+                        data.guru.map(g => `<option value="${g}">${g}</option>`).join('');
+                    
+                    document.getElementById('mataPelajaran').innerHTML = '<option value="" disabled selected>-- Pilih Mapel --</option>' + 
+                        data.mapel.map(m => `<option value="${m}">${m}</option>`).join('');
+                    
+                    document.getElementById('kelas').innerHTML = '<option value="" disabled selected>-- Pilih Kelas --</option>' + 
+                        data.kelas.map(k => `<option value="${k}">${k}</option>`).join('');
+
+                    document.getElementById('btnSimpan').disabled = false;
+                }
+            }).catch(err => {
+                console.error("Gagal memuat dropdown:", err);
+                document.getElementById('namaGuru').innerHTML = '<option value="" disabled>Gagal memuat data dropdown</option>';
+            });
+        });
+
+        // FUNGSI MEMANGGIL RIWAYAT LIVE DI BAWAH FORM
+        function muatRiwayatPerangkatGuru() {
+            const guru = document.getElementById('namaGuru').value;
+            const tbody = document.getElementById('tabelRiwayatBody');
+            const infoText = document.getElementById('txtInfoRiwayat');
+
+            if (!guru) return;
+
+            infoText.innerText = `Memuat daftar riwayat perangkat untuk: ${guru}...`;
+            tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #3a86ff;"><i class="fa-solid fa-spinner fa-spin"></i> Sedang mengambil data riwayat...</td></tr>`;
+
+            const urlRiwayat = `${WEB_APP_URL}?aksi=ambilRiwayatGuru&namaGuru=${encodeURIComponent(guru)}`;
+
+            fetch(urlRiwayat)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success" && data.rows && data.rows.length > 0) {
+                    cacheRiwayatGuru = data.rows;
+                    infoText.innerText = `Menampilkan ${data.rows.length} records perangkat untuk Guru: ${guru}`;
+                    
+                    tbody.innerHTML = data.rows.map((row, index) => {
+                        return `
+                            <tr>
+                                <td>
+                                    <button type="button" class="btn-edit" onclick="pindahkanKeFormEdit(${index})">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                    </button>
+                                </td>
+                                <td><b>${row.mapel}</b></td>
+                                <td><span style="color:#38bdf8">${row.kelas}</span></td>
+                                <td>${buatLinkIcon(row.kaldik)}</td>
+                                <td>${buatLinkIcon(row.jadwal)}</td>
+                                <td>${buatLinkIcon(row.atp)}</td>
+                                <td>${buatLinkIcon(row.silabus)}</td>
+                                <td>${buatLinkIcon(row.prota)}</td>
+                                <td>${buatLinkIcon(row.prosem)}</td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    cacheRiwayatGuru = [];
+                    infoText.innerText = `Belum ada riwayat berkas terunggah untuk Guru: ${guru}`;
+                    tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #94a3b8;">Belum ada data riwayat di sheet guru ini. Silakan lakukan input pertama kali.</td></tr>`;
+                }
+            }).catch(err => {
+                console.error("Riwayat Fetch Error:", err);
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #ef4444;">Gagal mengambil data riwayat berkas.</td></tr>`;
+            });
+        }
+
+        function buatLinkIcon(url) {
+            return url && url.toString().trim().startsWith('http') ? `<a href="${url}" target="_blank" class="link-icon"><i class="fa-solid fa-arrow-up-right-from-square"></i> Buka</a>` : `<span style="color: #64748b">-</span>`;
+        }
+
+        // FUNGSI EDIT DATA TABEL UNTUK DIKEMBALIKAN KE FORM
+        function pindahkanKeFormEdit(index) {
+            const dataRow = cacheRiwayatGuru[index];
+            
+            document.getElementById('mataPelajaran').value = dataRow.mapel;
+            document.getElementById('kelas').value = dataRow.kelas;
+            document.getElementById('linkKaldik').value = dataRow.kaldik;
+            document.getElementById('linkJadwal').value = dataRow.jadwal;
+            document.getElementById('linkAtp').value = dataRow.atp;
+            document.getElementById('linkSilabus').value = dataRow.silabus;
+            document.getElementById('linkProta').value = dataRow.prota;
+            document.getElementById('linkProsem').value = dataRow.prosem;
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // KIRIM DATA PROSES POST
+        function kirimDataKeSpreadsheet(e) {
+            e.preventDefault();
+            const btnSimpan = document.getElementById('btnSimpan');
+            const popup = document.getElementById('statusPopup');
+            const pIcon = document.getElementById('popupIcon');
+            const pTitle = document.getElementById('popupTitle');
+            const pMessage = document.getElementById('popupMessage');
+            const pCloseBtn = document.getElementById('popupCloseBtn');
+
+            pIcon.className = "popup-icon loading";
+            pIcon.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+            pTitle.innerText = "Sinkronisasi Server...";
+            pMessage.innerText = "Memproses validasi baris unik...";
+            pCloseBtn.style.display = "none";
+            popup.classList.add('show');
+            btnSimpan.disabled = true;
+
+            const formData = new URLSearchParams();
+            formData.append('aksi', 'simpanPerangkatLengkap');
+            formData.append('namaGuru', document.getElementById('namaGuru').value);
+            formData.append('mataPelajaran', document.getElementById('mataPelajaran').value);
+            formData.append('kelas', document.getElementById('kelas').value);
+            formData.append('linkKaldik', document.getElementById('linkKaldik').value);
+            formData.append('linkJadwal', document.getElementById('linkJadwal').value);
+            formData.append('linkAtp', document.getElementById('linkAtp').value);
+            formData.append('linkSilabus', document.getElementById('linkSilabus').value);
+            formData.append('linkProta', document.getElementById('linkProta').value);
+            formData.append('linkProsem', document.getElementById('linkProsem').value);
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    pIcon.className = "popup-icon success";
+                    pIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                    pTitle.innerText = "Tersimpan!";
+                    pMessage.innerText = data.info;
+                    pCloseBtn.style.display = "inline-block";
+                    
+                    // Reset input teks link saja
+                    document.getElementById('linkKaldik').value = "";
+                    document.getElementById('linkJadwal').value = "";
+                    document.getElementById('linkAtp').value = "";
+                    document.getElementById('linkSilabus').value = "";
+                    document.getElementById('linkProta').value = "";
+                    document.getElementById('linkProsem').value = "";
+                    
+                    muatRiwayatPerangkatGuru(); // Segarkan riwayat
+                } else { throw new Error(data.message); }
+            })
+            .catch(error => {
+                pIcon.className = "popup-icon"; pIcon.innerHTML = '<i class="fa-solid fa-circle-xmark" style="color:#ef4444;"></i>';
+                pTitle.innerText = "Gagal Simpan"; pMessage.innerText = error.message;
+                pCloseBtn.style.display = "inline-block";
+            }).finally(() => { btnSimpan.disabled = false; });
+        }
+
+        function tutupPopup() { document.getElementById('statusPopup').classList.remove('show'); }
+    </script>
 </body>
 </html>
