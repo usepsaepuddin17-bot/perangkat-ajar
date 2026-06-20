@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrasi Belajar - SMAN 15</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #1e3a8a; --bg: #f8fafc; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); padding: 20px; color: #334155; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .main-header { text-align: center; margin-bottom: 30px; }
+        .main-header h1 { color: var(--primary); font-weight: 800; font-size: 26px; }
+        
+        .guru-box { background: white; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); padding: 25px; margin-bottom: 25px; border: 1px solid #e2e8f0; }
+        .guru-info { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #f1f5f9; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .guru-info h3 { color: var(--primary); font-size: 19px; font-weight: 700; }
+        
+        .status-badge { display: inline-block; padding: 6px 12px; font-size: 11px; font-weight: bold; border-radius: 6px; text-transform: uppercase; }
+        .menunggu { background: #fef3c7; color: #d97706; }
+        .disetujui { background: #dbeafe; color: #2563eb; }
+        .terbit { background: #d1fae5; color: #059669; }
+
+        .links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .link-item { background: #f8fafc; padding: 12px 14px; border-radius: 8px; border: 1px solid #edf2f7; display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+        .link-item a { color: #2563eb; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; background: #e0f2fe; padding: 4px 10px; border-radius: 6px; }
+        .link-item a:hover { background: #bae6fd; }
+
+        .sign-area { display: flex; align-items: center; gap: 15px; margin-top: 15px; margin-bottom: 20px; background: #fafafa; padding: 10px; border-radius: 8px; border: 1px dashed #cbd5e1; width: fit-content; }
+        .img-ttd { height: 60px; object-fit: contain; border: 1px solid #e2e8f0; background: white; padding: 2px; }
+
+        .action-area { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { padding: 12px 20px; font-size: 13px; border-radius: 8px; cursor: pointer; border: none; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.9; }
+        .btn-verif { background: #3b82f6; color: white; }
+        .btn-ttd { background: #10b981; color: white; }
+
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; padding: 15px; z-index: 9999; }
+        .modal-content { background: white; width: 100%; max-width: 360px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .canvas-wrap { position: relative; width: 100%; height: 180px; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; margin: 15px 0; overflow: hidden; }
+        .stempel-overlay { position: absolute; left: 20px; top: 25px; width: 120px; height: 120px; object-fit: contain; opacity: 0.85; z-index: 10; pointer-events: none; display: none; }
+        canvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index: 1; }
+        .btn-upload-cap { background: #f1f5f9; color: #475569; position: relative; display: inline-block; padding: 8px 14px; font-size: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; border: 1px solid #cbd5e1; }
+        .btn-upload-cap input { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="main-header">
+        <h1>Panel Verifikasi & TTD Administrasi Belajar</h1>
+        <p style="color: #64748b; font-size: 14px; margin-top: 5px;">SMAN 15 Maluku Tengah</p>
+    </div>
+
+    <div id="loading-info" style="text-align: center; font-weight: bold; color: var(--primary); margin-top: 20px;"><i class="fa-solid fa-sync fa-spin"></i> Membuka basis data sekolah...</div>
+    <div id="mainDashboard"></div>
+</div>
+
+<div id="modalTTD" class="modal">
+    <div class="modal-content">
+        <h3 style="color: var(--primary); font-weight: 800;">Pengesahan Dokumen</h3>
+        <p style="font-size: 12px; color: #64748b; margin-top: 4px;">Pasang Cap stempel terlebih dahulu, lalu lakukan goresan TTD menggunakan jari tangan di HP.</p>
+        
+        <div class="canvas-wrap">
+            <img id="cap-img" class="stempel-overlay" src="" alt="Cap Sekolah">
+            <canvas id="canvasKepsek"></canvas>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="btn-upload-cap">
+                <i class="fa-solid fa-stamp"></i> 1. Pasang Cap
+                <input type="file" accept="image/*" onchange="prosesPasangCap(event)">
+            </div>
+            <button type="button" style="background:#ef4444; color:white; border:none; padding:6px 12px; font-size:11px; border-radius:6px; font-weight: bold;" onclick="bersihkanKanvasKepsek()">Hapus TTD</button>
+        </div>
+
+        <button class="btn" style="background:#059669; color:white; width:100%; padding:14px; justify-content: center; font-size: 15px;" onclick="kirimPenerbitanKepsek()">2. <i class="fa-solid fa-cloud-arrow-up"></i> Sahkan & Terbitkan</button>
+        <button class="btn" style="background:#94a3b8; color:white; width:100%; margin-top:6px; justify-content: center;" onclick="tutupModalTTD()">Batalkan</button>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgSyvm6G-STS2t6KwoC0Z7tXu6Xfu8wAyE5FkJrQ475mPD3KPDklHjd7VWyjZsFMXQ/exec";
+    let dataTerpilih = null;
+    const canvas = document.getElementById('canvasKepsek');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    function ambilDataSpreadsheet() {
+        document.getElementById('loading-info').style.display = 'block';
+        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "ambilSemuaData" }) })
+        .then(res => res.json()).then(res => {
+            document.getElementById('loading-info').style.display = 'none';
+            if(res.status === "success") { bangunDashboard(res.data); }
+        }).catch(() => {
+            document.getElementById('loading-info').innerHTML = "<span style='color:red;'>Gagal terhubung ke server Google Sheets.</span>";
+        });
+    }
+
+    function bangunDashboard(daftarData) {
+        const wadah = document.getElementById('mainDashboard');
+        wadah.innerHTML = "";
+        
+        if(!daftarData || daftarData.length === 0) {
+            wadah.innerHTML = "<p style='text-align:center; color:#64748b; padding:40px;'>Belum ada kiriman berkas administrasi belajar dari para guru.</p>";
+            return;
+        }
+
+        const namaPerangkat = [
+            "1. Kalender Pendidikan", "2. Alokasi Minggu Efektif", "3. Jadwal Mengajar", 
+            "4. CP dan ATP", "5. Program Tahunan", "6. Program Semester", 
+            "7. RPP / Modul Ajar", "8. KKTP", "9. Kisi-Kisi Soal", 
+            "10. Jurnal Guru", "11. Daftar Nilai & Absensi"
+        ];
+
+        daftarData.forEach(d => {
+            let badgeClass = d.status === "Diterbitkan" ? "terbit" : (d.status === "Disetujui Kurikulum" ? "disetujui" : "menunggu");
+            
+            // SCRIPT BERSIH: Tidak ada pemanggilan variabel mentah ${d.ttdGuru} di bagian atas ini
+            let cardHtml = `
+                <div class="guru-box">
+                    <div class="guru-info">
+                        <div>
+                            <h3>${d.namaGuru}</h3>
+                            <p style="font-size:13px; color:#64748b; font-weight:600; margin-top:4px;">Mata Pelajaran: ${d.mapel} | Kelas: ${d.kelas}</p>
+                        </div>
+                        <div>
+                            <span class="status-badge ${badgeClass}">${d.status}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="links-grid">
+            `;
+            
+            for(let i = 1; i <= 11; i++) {
+                let linkUrl = d["link" + i];
+                if(linkUrl) {
+                    cardHtml += `
+                        <div class="link-item">
+                            <span>${namaPerangkat[i-1]}</span> 
+                            <a href="${linkUrl}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> Lihat</a>
+                        </div>
+                    `;
+                }
+            }
+            
+            cardHtml += `</div>`;
+
+            // Data string base64 dipanggil secara higienis di dalam elemen <img>
+            if(d.ttdGuru) {
+                cardHtml += `
+                    <div class="sign-area">
+                        <span style="font-size:12px; font-weight:bold; color:#475569;">TTD Guru:</span>
+                        <img class="img-ttd" src="${d.ttdGuru}" alt="TTD Guru">
+                    </div>
+                `;
+            }
+            
+            cardHtml += `<div class="action-area">`;
+            
+            if(d.status === "Menunggu Verifikasi" || d.status === "") {
+                cardHtml += `<button class="btn btn-verif" onclick="eksekusiSetujuKurikulum('${d.namaGuru}', ${d.idBaris})"><i class="fa-solid fa-check-double"></i> Verifikasi Kurikulum</button>`;
+            } else if(d.status === "Disetujui Kurikulum") {
+                cardHtml += `<button class="btn btn-ttd" onclick="bukaLayarTTDKepsek('${d.namaGuru}', ${d.idBaris})"><i class="fa-solid fa-pen-nib"></i> Kepala Sekolah TTD via HP</button>`;
+            }
+            
+            cardHtml += `</div></div>`;
+            wadah.innerHTML += cardHtml;
+        });
+    }
+
+    function eksekusiSetujuKurikulum(nama, id) {
+        if(confirm(`Setujui seluruh berkas administrasi milik ${nama}?`)) {
+            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "updateStatus", namaGuru: nama, idBaris: id, status: "Disetujui Kurikulum" }) })
+            .then(() => { alert("Berkas berhasil diverifikasi oleh Kurikulum."); ambilDataSpreadsheet(); });
+        }
+    }
+
+    function bukaLayarTTDKepsek(nama, id) {
+        dataTerpilih = { namaGuru: nama, idBaris: id };
+        document.getElementById('modalTTD').style.display = 'flex';
+        canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+        ctx.lineWidth = 4; ctx.lineCap = "round"; ctx.strokeStyle = "#1e3a8a";
+        
+        canvas.addEventListener('touchstart', (e) => { drawing = true; const p = dapatkanPosisiSentuh(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); });
+        canvas.addEventListener('touchmove', (e) => { if(!drawing) return; const p = dapatkanPosisiSentuh(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); });
+        canvas.addEventListener('touchend', () => drawing = false);
+    }
+
+    function dapatkanPosisiSentuh(e) { 
+        const r = canvas.getBoundingClientRect(); 
+        return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top }; 
+    }
+
+    function prosesPasangCap(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.getElementById('cap-img');
+                img.src = event.target.result; img.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function bersihkanKanvasKepsek() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    function tutupModalTTD() { document.getElementById('modalTTD').style.display = 'none'; document.getElementById('cap-img').style.display = 'none'; bersihkanKanvasKepsek(); }
+
+    function kirimPenerbitanKepsek() {
+        if(!confirm("Sahkan administrasi ini dan terbitkan secara resmi?")) return;
+        const dataGambarTTD = canvas.toDataURL();
+        
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "updateStatus", namaGuru: dataTerpilih.namaGuru, idBaris: dataTerpilih.idBaris, status: "Diterbitkan", ttdKepsek: dataGambarTTD
+            })
+        }).then(() => {
+            alert("Administrasi Belajar Resmi Diterbitkan!");
+            tutupModalTTD(); ambilDataSpreadsheet();
+        });
+    }
+
+    window.onload = ambilDataSpreadsheet;
+</script>
+</body>
+</html>
