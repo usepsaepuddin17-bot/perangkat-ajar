@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CP & ATP - Perangkat Utama</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-perangkat: linear-gradient(135deg, #0b1329 0%, #1c2541 100%); /* Tema Gelap Eksklusif */
+            --card-dark: #1c2541;
+            --card-hover: #293241;
+            --accent-blue: #3a86ff; /* Warna Aksen Biru Perangkat Utama */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-perangkat);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .perangkat-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* Header Section */
+        .pu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #3d5a80;
+            padding-bottom: 20px;
+        }
+
+        .pu-title h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(45deg, #3a86ff, #00b4d8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .pu-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* Navigasi Kembali ke Dashboard */
+        .back-dashboard-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #293241;
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #3d5a80;
+            transition: all 0.3s ease;
+        }
+
+        .back-dashboard-btn:hover {
+            background: #3d5a80;
+            transform: translateX(-3px);
+        }
+
+        /* GRID 3 PANEL UTAMA */
+        .pu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .pu-panel-item {
+            background: var(--card-dark);
+            border: 1px solid #3d5a80;
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Garis Efek Atas Berwarna Biru */
+        .pu-panel-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-blue);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .pu-panel-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .pu-panel-item:hover {
+            transform: translateY(-8px);
+            background: var(--card-hover);
+            border-color: var(--accent-blue);
+            box-shadow: 0 15px 30px rgba(58, 134, 255, 0.2);
+        }
+
+        .pu-icon {
+            font-size: 45px;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .pu-panel-item:hover .pu-icon {
+            transform: scale(1.15);
+        }
+
+        .pu-panel-item h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .pu-panel-item p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { padding: 20px 10px; }
+            .pu-header { flex-direction: column; gap: 15px; text-align: center; }
+            .pu-grid { grid-template-columns: 1fr; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="perangkat-container">
+        <header class="pu-header">
+            <div class="pu-title">
+                <h1>Sistem Administrasi CP & ATP</h1>
+                <p><i class="fa-solid fa-layer-group"></i> Pengisian komponen utama Kurikulum Merdeka</p>
+            </div>
+            <a href="dashbor.html" class="back-dashboard-btn">
+                <i class="fa-solid fa-gauge-high"></i> Kembali ke Dashboard
+            </a>
+        </header>
+
+        <main class="pu-grid">
+            
+            <a href="masukan-kaldik.html" class="pu-panel-item">
+                <div class="pu-icon"><i class="fa-solid fa-calendar-week"></i></div>
+                <h3>Kalender Pendidikan</h3>
+                <p>Membuka lembar pengisian berkas masukan-kaldik.html</p>
+            </a>
+
+            <a href="masukan-atp.html" class="pu-panel-item">
+                <div class="pu-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                <h3>Alur Tujuan Pembelajaran (ATP)</h3>
+                <p>Membuka lembar pengisian berkas masukan-atp.html</p>
+            </a>
+
+            <a href="masukan-prota.html" class="pu-panel-item">
+                <div class="pu-icon"><i class="fa-solid fa-business-time"></i></div>
+                <h3>Prota & Promes</h3>
+                <p>Membuka lembar pengisian berkas masukan-prota.html</p>
+            </a>
+
+        </main>
+    </div>
+
+</body>
+</html>
