@@ -231,7 +231,7 @@
             padding: 20px;
         }
 
-        /* ---- PERBAIKAN RESPONSIVE LAYOUT UNTUK HP DAN TABLET ---- */
+/* ---- PERBAIKAN RESPONSIVE LAYOUT UNTUK HP DAN TABLET ---- */
         @media (max-width: 900px) {
             body {
                 padding: 20px 12px;
@@ -253,6 +253,24 @@
             .viewer-card {
                 padding: 18px;
                 min-height: 520px; /* Sedikit diperpendek di HP agar pas */
+            }
+
+            /* --- BERIKAN SCROLL OTOMATIS PADA PENAMPUNG IFRAME --- */
+            .frame-container {
+                width: 100%;
+                height: 65vh; /* Tinggi area pratinjau dokumen di HP */
+                overflow: auto !important; /* Aktifkan scroll bar jika dokumen melebar */
+                -webkit-overflow-scrolling: touch; /* Scroll terasa smooth/halus di HP */
+                display: block; /* Mengubah flex menjadi block agar scroll bekerja */
+            }
+
+            /* --- AMANKAN LEBAR DOKUMEN AGAR TIDAK TERPOTONG ATAU GEPLENG --- */
+            iframe {
+                width: 100%;
+                min-width: 650px; /* Lebar minimal dokumen agar pas dibaca dan bisa di-scroll */
+                height: 100%;
+                border: none;
+                display: none; /* Tetap ikuti logic script JavaScript Anda */
             }
 
             .viewer-header {
