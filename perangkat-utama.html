@@ -6,7 +6,7 @@
 <title>Administrasi Belajar Guru - SMAN 15</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -103,15 +103,22 @@
 
     function muatDropdown() {
         fetch(SCRIPT_URL).then(res => res.json()).then(res => {
-            isiOpsi('namaGuru', res.guru, "Pilih Nama Anda");
-            isiOpsi('mapel', res.mapel, "Pilih Mata Pelajaran");
-            isiOpsi('kelas', res.kelas, "Pilih Kelas");
+            // Memastikan data dropdown diambil aman dari array dinamis server
+            let guruArray = res.guru || (res.daftarGuru ? res.daftarGuru.map(g => g.nama) : []);
+            let mapelArray = res.mapel || [];
+            let kelasArray = res.kelas || [];
+
+            isiOpsi('namaGuru', guruArray, "Pilih Nama Anda");
+            isiOpsi('mapel', mapelArray, "Pilih Mata Pelajaran");
+            isiOpsi('kelas', kelasArray, "Pilih Kelas");
+            
             ambilSemuaRiwayat();
         }).catch(() => alert("Gagal memuat data master dari Spreadsheet."));
     }
 
     function isiOpsi(idElemen, arrayData, placeholder) {
         let el = document.getElementById(idElemen);
+        if(!el) return;
         el.innerHTML = `<option value="">-- ${placeholder} --</option>`;
         arrayData.forEach(item => { el.innerHTML += `<option value="${item}">${item}</option>`; });
     }
@@ -119,8 +126,11 @@
     function ambilSemuaRiwayat() {
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "ambilSemuaData" }) })
         .then(res => res.json()).then(res => {
-            if(res.status === "success") { dataSeluruhGuru = res.data; cekRiwayatGuru(); }
-        });
+            if(res.status === "success") { 
+                dataSeluruhGuru = res.dataBerkas || res.data || []; 
+                cekRiwayatGuru(); 
+            }
+        }).catch(err => console.error("Gagal mengambil riwayat:", err));
     }
 
     function cekRiwayatGuru() {
@@ -128,10 +138,16 @@
         const wadah = document.getElementById('kontenRiwayat');
         const info = document.getElementById('statusMencari');
         
-        if(!namaDipilih) { wadah.innerHTML = ""; info.style.display = "block"; return; }
-        info.style.display = "none";
+        if(!wadah) return;
+        if(!namaDipilih) { wadah.innerHTML = ""; if(info) info.style.display = "block"; return; }
+        if(info) info.style.display = "none";
         
-        const berkasGuru = dataSeluruhGuru.filter(d => d.namaGuru.trim() === namaDipilih.trim());
+        // Melakukan pencarian aman case-insensitive
+        const berkasGuru = dataSeluruhGuru.filter(d => {
+            let namaObj = d.namaGuru || d.nama || "";
+            return namaObj.toString().trim().toLowerCase() === namaDipilih.trim().toLowerCase();
+        });
+
         if(berkasGuru.length === 0) {
             wadah.innerHTML = "<p style='font-size:13px; color:#64748b; text-align:center; padding:15px;'>Anda belum memiliki riwayat pengiriman berkas.</p>";
             return;
@@ -146,26 +162,35 @@
         ];
 
         berkasGuru.forEach(d => {
-            let cls = d.status === "Diterbitkan" ? "terbit" : (d.status === "Disetujui Kurikulum" ? "disetujui" : "menunggu");
+            let currentStatus = d.status || "Menunggu Verifikasi";
+            let cls = currentStatus === "Diterbitkan" ? "terbit" : (currentStatus === "Disetujui Kurikulum" ? "disetujui" : "menunggu");
+            let namaGuruValid = d.namaGuru || d.nama || namaDipilih;
+
             html += `
-                <div class="history-item" style="border-left: 5px solid ${d.status === 'Diterbitkan' ? '#10b981' : (d.status === 'Disetujui Kurikulum' ? '#3b82f6' : '#f59e0b')};">
+                <div class="history-item" style="border-left: 5px solid ${currentStatus === 'Diterbitkan' ? '#10b981' : (currentStatus === 'Disetujui Kurikulum' ? '#3b82f6' : '#f59e0b')};">
                     <div class="history-header">
-                        <div><strong>${d.mapel} (${d.kelas})</strong></div>
-                        <div><span class="badge ${cls}">${d.status}</span></div>
+                        <div><strong>${d.mapel || '-'} (${d.kelas || '-'})</strong></div>
+                        <div><span class="badge ${cls}">${currentStatus}</span></div>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 6px;">
             `;
 
             for(let i = 1; i <= 11; i++) {
+                // Skrip pengaman dinamis: Mencari data properti link objek secara presisi
                 let urlLink = d["link" + i];
-                let kolomKe = i + 4; // Kolom 5 di excel (E) adalah Link 1, dst.
-                if(urlLink) {
+                let kolomKe = i + 4; 
+                
+                if(urlLink && urlLink.toString().trim() !== "") {
+                    let isDitolak = urlLink.toString().startsWith("DITOLAK:");
+                    let displayUrl = isDitolak ? "#" : urlLink;
+                    let labelTeks = isDitolak ? `<span style="color:#ef4444; font-weight:bold;">[Perbaikan] ${urlLink}</span>` : namaPerangkat[i-1];
+
                     html += `
-                        <div class="link-row">
-                            <span style="font-weight:600; color:#475569;">${namaPerangkat[i-1]}</span>
+                        <div class="link-row" style="${isDitolak ? 'background-color:#fef2f2; border:1px solid #fca5a5;' : ''}">
+                            <span style="font-weight:600; color:#475569;">${labelTeks}</span>
                             <div style="display:flex; gap:5px;">
-                                <a href="${urlLink}" target="_blank" style="background:#3b82f6; color:white; padding:3px 8px; border-radius:4px; text-decoration:none; font-size:11px;"><i class="fa-solid fa-eye"></i> Cek</a>
-                                <button type="button" class="btn-edit" onclick="aksiEditLink('${d.namaGuru}', ${d.idBaris}, ${kolomKe}, '${urlLink}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                                ${!isDitolak ? `<a href="${displayUrl}" target="_blank" style="background:#3b82f6; color:white; padding:3px 8px; border-radius:4px; text-decoration:none; font-size:11px;"><i class="fa-solid fa-eye"></i> Cek</a>` : ''}
+                                <button type="button" class="btn-edit" onclick="aksiEditLink('${namaGuruValid}', ${d.idBaris}, ${kolomKe}, '${isDitolak ? '' : urlLink}')"><i class="fa-solid fa-pen"></i> ${isDitolak ? 'Revisi Berkas' : 'Edit'}</button>
                             </div>
                         </div>
                     `;
@@ -177,17 +202,20 @@
     }
 
     function aksiEditLink(nama, idBaris, kolomKe, urlLama) {
-        let urlBaru = prompt("Masukkan Link Google Doc Baru untuk merevisi berkas ini:", urlLama);
+        let urlBaru = prompt("Masukkan Link Google Doc Baru untuk memperbarui/merevisi berkas ini:", urlLama);
         if(urlBaru && urlBaru.trim() !== "" && urlBaru !== urlLama) {
-            document.getElementById('loading').style.display = 'block';
+            if(document.getElementById('loading')) document.getElementById('loading').style.display = 'block';
             fetch(SCRIPT_URL, {
                 method: "POST",
                 body: JSON.stringify({ action: "updateLinkSpesifik", namaGuru: nama, idBaris: idBaris, kolom: kolomKe, linkBaru: urlBaru })
             }).then(() => {
                 alert("Tautan berkas sukses diperbarui!");
                 ambilSemuaRiwayat();
-                document.getElementById('loading').style.display = 'none';
-            }).catch(() => { alert("Gagal mengupdate"); document.getElementById('loading').style.display = 'none'; });
+                if(document.getElementById('loading')) document.getElementById('loading').style.display = 'none';
+            }).catch(() => { 
+                alert("Gagal melakukan pembaruan tautan."); 
+                if(document.getElementById('loading')) document.getElementById('loading').style.display = 'none'; 
+            });
         }
     }
 
@@ -204,7 +232,7 @@
 
     function kirimSemuaData(e) {
         e.preventDefault();
-        document.getElementById('loading').style.display = 'block';
+        if(document.getElementById('loading')) document.getElementById('loading').style.display = 'block';
         const payload = {
             action: "kirimAdministrasi",
             namaGuru: document.getElementById('namaGuru').value,
@@ -228,8 +256,11 @@
             alert("Seluruh Perangkat Administrasi Berhasil Dikirim!");
             document.getElementById('formAdmin').reset(); hapusTTD();
             ambilSemuaRiwayat();
-            document.getElementById('loading').style.display = 'none';
-        }).catch(() => { alert("Pengiriman gagal"); document.getElementById('loading').style.display = 'none'; });
+            if(document.getElementById('loading')) document.getElementById('loading').style.display = 'none';
+        }).catch(() => { 
+            alert("Pengiriman gagal"); 
+            if(document.getElementById('loading')) document.getElementById('loading').style.display = 'none'; 
+        });
     }
     window.onload = muatDropdown;
 </script>
