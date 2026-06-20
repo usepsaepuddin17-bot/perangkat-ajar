@@ -220,7 +220,6 @@
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
-        /* Grid Panel Diubah Menjadi Otomatis Menampung 5 Item Dengan Rapi */
         .panel-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -517,7 +516,7 @@
             <p>Guru Mata Pelajaran,</p>
             <div class="signature-space"></div>
             <p><strong id="display-guru-footer" style="text-decoration: underline;">Usep Saepudin, M.Pd.</strong></p>
-            <p>NIP. 19850312 201001 1 005</p>
+            <p id="display-nip-container">NIP. <span id="display-nip">19850312 201001 1 005</span></p>
         </footer>
     </div>
 
@@ -534,6 +533,10 @@
             <div class="control-group">
                 <label>Nama Guru</label>
                 <input type="text" id="input-guru" value="Usep Saepudin, M.Pd.">
+            </div>
+            <div class="control-group">
+                <label>NIP Guru</label>
+                <input type="text" id="input-nip" value="19850312 201001 1 005">
             </div>
             <div class="control-group">
                 <label>Tahun Pelajaran</label>
@@ -580,6 +583,7 @@
             document.getElementById('display-mapel').innerText = document.getElementById('input-mapel').value;
             document.getElementById('display-guru').innerText = document.getElementById('input-guru').value;
             document.getElementById('display-guru-footer').innerText = document.getElementById('input-guru').value;
+            document.getElementById('display-nip').innerText = document.getElementById('input-nip').value;
             document.getElementById('display-tp').innerText = document.getElementById('input-tp').value;
             document.getElementById('display-kota').innerText = document.getElementById('input-kota').value;
             document.getElementById('display-tahun').innerText = document.getElementById('input-tahun').value;
