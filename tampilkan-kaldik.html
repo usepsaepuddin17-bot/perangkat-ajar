@@ -115,7 +115,7 @@
             border-color: var(--accent-color);
         }
 
-        /* GRID PANEL DOKUMEN (SINKRON 11 PERANGKAT LENGKAP) */
+        /* GRID PANEL DOKUMEN */
         .panels-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -231,9 +231,46 @@
             padding: 20px;
         }
 
+        /* ---- PERBAIKAN RESPONSIVE LAYOUT UNTUK HP DAN TABLET ---- */
         @media (max-width: 900px) {
-            .main-layout { grid-template-columns: 1fr; }
-            .panels-grid { grid-template-columns: 1fr; }
+            body {
+                padding: 20px 12px;
+            }
+            
+            .back-nav {
+                margin-left: 4px;
+            }
+
+            .main-layout { 
+                grid-template-columns: 1fr; /* Turun menjadi 1 kolom penuh */
+                gap: 20px;
+            }
+
+            .filter-card {
+                padding: 18px;
+            }
+
+            .viewer-card {
+                padding: 18px;
+                min-height: 520px; /* Sedikit diperpendek di HP agar pas */
+            }
+
+            .viewer-header {
+                flex-direction: column; /* Judul dan tombol susun vertikal */
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .btn-external {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .panels-grid { 
+                grid-template-columns: 1fr; /* Di HP kecil tombol berbaris kebawah */
+            }
         }
     </style>
 </head>
@@ -280,7 +317,7 @@
                     <i class="fa-solid fa-calendar-days"></i> <span>1. Kaldik</span>
                 </button>
                 <button class="panel-btn" onclick="tampilkanFile('link2')" disabled id="btn-link2">
-                    <i class="fa-solid fa-ビジネス-time"></i> <span>2. Minggu Efektif</span>
+                    <i class="fa-solid fa-business-time"></i> <span>2. Minggu Efektif</span>
                 </button>
                 <button class="panel-btn" onclick="tampilkanFile('link3')" disabled id="btn-link3">
                     <i class="fa-solid fa-clock"></i> <span>3. Jadwal Mengajar</span>
@@ -338,7 +375,6 @@
     </div>
 
     <script>
-        // SCRIPT URL disesuaikan dengan pengolahan sistem POST/GET database Anda
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgSyvm6G-STS2t6KwoC0Z7tXu6Xfu8wAyE5FkJrQ475mPD3KPDklHjd7VWyjZsFMXQ/exec";
         let masterGuru = [];
         let masterBerkas = [];
@@ -351,7 +387,6 @@
             "10. Jurnal Guru", "11. Daftar Nilai & Absensi"
         ];
 
-        // 1. MEMBUAT FILTER AWAL LEWAT DATABASE UTAMA (SINKRON SPREADSHEET)
         document.addEventListener("DOMContentLoaded", function() {
             fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "ambilSemuaData" }) })
             .then(res => res.json())
@@ -360,7 +395,6 @@
                     masterGuru = res.daftarGuru || [];
                     masterBerkas = res.dataBerkas || [];
                     
-                    // Urutkan nama guru abjad A-Z
                     masterGuru.sort((a, b) => a.nama.localeCompare(b.nama));
                     
                     document.getElementById('namaGuru').innerHTML = '<option value="" disabled selected>-- Pilih Guru --</option>' + 
@@ -372,7 +406,6 @@
             });
         });
 
-        // 2. KETIKA NAMA GURU DIPILIH, INPUT OPTION MAPEL & KELAS DINAMIS
         function ambilDataPerangkatGuru() {
             const guruDipilih = document.getElementById('namaGuru').value;
             const selectMapel = document.getElementById('mataPelajaran');
@@ -381,7 +414,6 @@
             resetViewer();
             nonaktifkanSemuaPanel();
 
-            // Saring seluruh record berkas guru yang cocok di database
             let berkasGuru = masterBerkas.filter(d => d.namaGuru === guruDipilih);
             let profilGuru = masterGuru.find(g => g.nama === guruDipilih) || {};
 
@@ -398,7 +430,6 @@
                 selectMapel.disabled = false;
                 selectKelas.disabled = false;
             } else {
-                // Kasus jika guru ada di Sheet1 master tapi belum pernah mengisi berkas
                 selectMapel.innerHTML = `<option value="${profilGuru.mapel || '-'}">${profilGuru.mapel || '-'}</option>`;
                 selectKelas.innerHTML = `<option value="${profilGuru.kelas || '-'}">${profilGuru.kelas || '-'}</option>`;
                 selectMapel.disabled = true;
@@ -407,7 +438,6 @@
             }
         }
 
-        // 3. COCOKKAN KOMBINASI FILTER AKHIR UNTUK MEMBUKA AKSES TOMBOL PANEL
         function validasiKombinasiFilter() {
             const guruDipilih = document.getElementById('namaGuru').value;
             const mapelDipilih = document.getElementById('mataPelajaran').value;
@@ -415,7 +445,6 @@
 
             if(!guruDipilih || !mapelDipilih || !kelasDipilih) return;
 
-            // Cari data record spesifik baris guru yang klop
             const hasilCari = masterBerkas.find(r => r.namaGuru === guruDipilih && r.mapel === mapelDipilih && r.kelas === kelasDipilih);
 
             if(hasilCari) {
@@ -427,7 +456,6 @@
             }
         }
 
-        // 4. AKTIFKAN PANEL HANYA JIKA FIELD LINK BERKAS TERISI (ANTI CRASH)
         function aktifkanPanelTersedia(row) {
             for(let i = 1; i <= 11; i++) {
                 const btn = document.getElementById(`btn-link${i}`);
@@ -447,7 +475,6 @@
             }
         }
 
-        // 5. EMBED & TAMPILKAN FILE SECARA INSTAN KE AREA VIEWER (IFRAME)
         function tampilkanFile(keyLink) {
             if(!dataCocokDitemukan) return;
 
@@ -459,11 +486,9 @@
             const loader = document.getElementById('loadingStatus');
             const btnExternal = document.getElementById('btnBukaEksternal');
 
-            // Ekstrak index nomor untuk memunculkan judul perangkat secara rapi
             let indexNo = parseInt(keyLink.replace('link', '')) - 1;
             let teksJudul = namaPerangkat[indexNo];
 
-            // Konversi link Google Docs/Drive biasa agar aman saat di-embed di iframe
             let urlEmbed = urlAsli;
             if (urlAsli.includes("drive.google.com/file/d/")) {
                 let fileId = urlAsli.split("/file/d/")[1].split("/")[0];
