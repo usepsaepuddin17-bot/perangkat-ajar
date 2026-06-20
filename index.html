@@ -508,33 +508,24 @@
             <div class="panel-grid">
                 <div class="panel-item" onclick="bukaFitur('tampilkan-kaldik.html', 'Capaian Pembelajaran (CP) & ATP')">
                     <div class="panel-icon"><i class="fa-solid fa-layer-group"></i></div>
-                    <h5>CP & ATP</h5>
+                    <h5>PERANGKAT PEMBELAJARAN</h5>
                     <p>Kurikulum Merdeka</p>
                 </div>
-                <div class="panel-item" onclick="bukaFitur('tampilkan-modul.html', 'Modul Ajar / RPP Plus')">
-                    <div class="panel-icon"><i class="fa-solid fa-folder-open"></i></div>
-                    <h5>Modul Ajar</h5>
-                    <p>Edisi Administrasi 2026</p>
-                </div>
-                <div class="panel-item" onclick="bukaFitur('tampilkan-kktp.html', 'KKTP / Kriteria Ketuntasan')">
-                    <div class="panel-icon"><i class="fa-solid fa-chart-bar"></i></div>
-                    <h5>KKTP / KKM</h5>
-                    <p>Ketuntasan Pembelajaran</p>
-                </div>
-                <div class="panel-item" onclick="bukaFitur('tampilkan-jurnal.html', 'Jurnal Mengajar Harian')">
-                    <div class="panel-icon"><i class="fa-solid fa-pen-to-square"></i></div>
-                    <h5>Jurnal Harian</h5>
-                    <p>Presensi & Aktivitas</p>
+                
+                <div class="panel-item" onclick="bukaFitur('tampilkan-pengesahan.html', 'Pengesahan, Tanda Tangan & Penerbitan')">
+                    <div class="panel-icon"><i class="fa-solid fa-file-signature"></i></div>
+                    <h5>PENGESAHAN</h5>
+                    <p>Diterbitkan Kepala Sekolah</p>
                 </div>
 
                 <div class="panel-item" onclick="bukaDashboardKurikulum()" style="background-color: #f0fdf4; border: 1px solid #bbf7d0;">
                     <div class="panel-icon" style="color: #16a34a;"><i class="fa-solid fa-shield-halved"></i></div>
-                    <h5 style="color: #16a34a;">Verifikasi Perangkat</h5>
-                    <p>Akses Kurikulum (🔒)</p>
+                    <h5 style="color: #16a34a;">VERIVIKASI</h5>
+                    <p>Bagian Kurikulum (🔒)</p>
                 </div>
                 <div class="panel-item setting-item" onclick="toggleModal(true)">
                     <div class="panel-icon"><i class="fa-solid fa-sliders"></i></div>
-                    <h5>Ubah Data</h5>
+                    <h5>Kelola Data</h5>
                     <p>Konfigurasi Dokumen</p>
                 </div>
             </div>
@@ -595,24 +586,20 @@
 
     <script>
         function bukaDashboardKurikulum() {
-        // Pengaturan kata sandi / kunci pembuka panel
-        var passwordBenar = "kurikulum15"; 
-        
-        var inputPassword = prompt("Masukkan Kunci Pembuka Panel Kurikulum:");
-        
-        if (inputPassword === null) {
-            return; // Jika menekan tombol Batal / Cancel
+            var passwordBenar = "kurikulum15"; 
+            var inputPassword = prompt("Masukkan Kunci Pembuka Panel Kurikulum:");
+            
+            if (inputPassword === null) {
+                return; 
+            }
+            
+            if (inputPassword === passwordBenar) {
+                alert("🔓 Akses Diterima! Membuka Dashboard Kurikulum...");
+                window.location.href = "dashboard-kurikulum.html";
+            } else {
+                alert("❌ Kunci salah! Anda tidak memiliki otoritas untuk membuka panel ini.");
+            }
         }
-        
-        if (inputPassword === passwordBenar) {
-            alert("🔓 Akses Diterima! Membuka Dashboard Kurikulum...");
-            // Mengarahkan ke file dashboard-kurikulum.html
-            window.location.href = "dashboard-kurikulum.html";
-        } else {
-            alert("❌ Kunci salah! Anda tidak memiliki otoritas untuk membuka panel ini.");
-        }
-        }
-
 
         function toggleModal(show) {
             const modal = document.getElementById('modalAdmin');
@@ -642,12 +629,11 @@
             tampilkanToast("Sistem Berhasil Diperbarui!");
         }
 
-        // FUNGSI DIUBAH AGAR MENGARAHKAN HALAMAN KE URL TUJUAN
         function bukaFitur(urlTujuan, namaFitur) {
             tampilkanToast("Mengakses Berkas: " + namaFitur);
             setTimeout(() => {
                 window.location.href = urlTujuan;
-            }, 800); // Memberikan jeda 0.8 detik agar animasi toast sempat terlihat
+            }, 800); 
         }
 
         function tampilkanToast(pesan) {
