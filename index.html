@@ -404,6 +404,31 @@
         }
         .save-btn:hover { background: #b45309; }
 
+        /* TOMBOL MENUJU DASHBOARD */
+        .dashboard-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: #4b5563;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 10px;
+            border: 1px solid #6b7280;
+            transition: all 0.3s ease;
+        }
+        .dashboard-btn:hover {
+            background: #374151;
+            border-color: #4b5563;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
         /* Toast Notif */
         .toast-notif {
             position: fixed;
@@ -550,7 +575,12 @@
                 <label>Tahun Berjalan</label>
                 <input type="text" id="input-tahun" value="2026">
             </div>
+            
             <button class="save-btn" onclick="simpanDanTerapkan()">Simpan & Perbarui Dokumen</button>
+            
+            <a href="dashbor.html" class="dashboard-btn">
+                <i class="fa-solid fa-gauge-high"></i> Ke Halaman Dashboard
+            </a>
         </div>
     </div>
 
