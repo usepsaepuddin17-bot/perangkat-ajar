@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Spreadsheet System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dashboard: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* Warna BG Gelap Moderen */
+            --card-dark: #1e293b;
+            --card-hover: #334155;
+            --accent-green: #10b981; /* Identik dengan warna Excel / Spreadsheet */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-dashboard);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* Header Dashboard */
+        .db-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 20px;
+        }
+
+        .db-title h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            background: linear-gradient(45deg, #38bdf8, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .db-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* Tombol Kembali */
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #334155;
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #475569;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #475569;
+            transform: translateX(-3px);
+        }
+
+        /* GRID PANEL SPREADSHEET */
+        .db-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .db-panel-item {
+            background: var(--card-dark);
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Garis Efek Atas Berwarna Hijau Spreadsheet */
+        .db-panel-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-green);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .db-panel-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .db-panel-item:hover {
+            transform: translateY(-8px);
+            background: var(--card-hover);
+            border-color: var(--accent-green);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.15);
+        }
+
+        .db-icon {
+            font-size: 40px;
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .db-panel-item:hover .db-icon {
+            transform: scale(1.15);
+        }
+
+        .db-panel-item h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .db-panel-item p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Notifikasi Toast Kelip */
+        .toast-db {
+            position: fixed;
+            bottom: -100px;
+            right: 20px;
+            background: var(--accent-green);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.4s ease;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .toast-db.show { bottom: 20px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { padding: 20px 10px; }
+            .db-header { flex-direction: column; gap: 15px; text-align: center; }
+            .db-grid { grid-template-columns: 1fr; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header class="db-header">
+            <div class="db-title">
+                <h1>Pusat Pengisian Administrasi</h1>
+                <p><i class="fa-solid fa-database"></i> Integrasi Data Langsung ke Spreadsheet Utama</p>
+            </div>
+            <a href="index.html" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i> Lihat Dokumen Utama
+            </a>
+        </header>
+
+        <main class="db-grid">
+            
+            <div class="db-panel-item" onclick="bukaSheet('Link_Spreadsheet_CP_ATP_Disini')">
+                <div class="db-icon"><i class="fa-solid fa-file-excel"></i></div>
+                <h3>Isi CP & ATP</h3>
+                <p>Klik untuk edit input data target kurikulum</p>
+            </div>
+
+            <div class="db-panel-item" onclick="bukaSheet('Link_Spreadsheet_Modul_Ajar_Disini')">
+                <div class="db-icon"><i class="fa-solid fa-table"></i></div>
+                <h3>Isi Modul Ajar</h3>
+                <p>Klik untuk edit input skenario pembelajaran</p>
+            </div>
+
+            <div class="db-panel-item" onclick="bukaSheet('Link_Spreadsheet_KKTP_Disini')">
+                <div class="db-icon"><i class="fa-solid fa-file-invoice"></i></div>
+                <h3>Isi KKTP / KKM</h3>
+                <p>Klik untuk edit kriteria ketuntasan nilai</p>
+            </div>
+
+            <div class="db-panel-item" onclick="bukaSheet('Link_Spreadsheet_Jurnal_Disini')">
+                <div class="db-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                <h3>Isi Jurnal Harian</h3>
+                <p>Klik untuk edit absensi & aktivitas harian kelas</p>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="toast" class="toast-db">
+        <i class="fa-solid fa-circle-notch fa-spin"></i>
+        <span id="toast-text">Membuka lembar kerja...</span>
+    </div>
+
+    <script>
+        // Fungsi simulasi membuka/mengarahkan ke link Google Spreadsheet masing-masing file
+        function bukaSheet(linkSpreadsheet) {
+            tampilkanToast("Menghubungkan ke Spreadsheet Aman... Mohon Tunggu!");
+            
+            // Catatan: Ganti 'linkSpreadsheet' dengan URL Google Sheet Anda nantinya jika sudah online.
+            // Contoh implementasi asli: window.open('https://docs.google.com/spreadsheets/d/...', '_blank');
+            setTimeout(() => {
+                alert("Sistem Berhasil Dialihkan! (Di dunia nyata, baris ini akan langsung membuka tab baru berisi lembar Google Sheet Anda)");
+            }, 800);
+        }
+
+        // Fungsi memunculkan Toast Notif
+        function tampilkanToast(pesan) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = pesan;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+    </script>
+</body>
+</html>
