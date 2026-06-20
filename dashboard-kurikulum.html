@@ -14,7 +14,7 @@
         .main-header { text-align: center; margin-bottom: 25px; }
         .main-header h1 { color: var(--primary); font-weight: 800; font-size: 24px; }
         
-        /* Gaya Dropdown Filter Tunggal */
+        /* Gaya Dropdown Filter */
         .filter-wrapper { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 25px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 8px; }
         .filter-wrapper label { font-weight: 700; color: var(--primary); font-size: 14px; }
         .filter-wrapper select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #cbd5e1; font-size: 14px; font-weight: 600; color: #334155; outline: none; transition: border-color 0.2s; background-color: #ffffff; cursor: pointer; }
@@ -25,7 +25,7 @@
         .guru-info h3 { color: var(--primary); font-size: 20px; font-weight: 800; }
         
         .links-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-        .link-item { background: #f8fafc; padding: 14px 18px; border-radius: 10px; border: 1px solid #edf2f7; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .link-item { background: #f8fafc; padding: 14px 18px; border-radius: 10px; border: 1px solid #edf2f7; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; transition: all 0.3s ease; }
         .link-title { font-size: 14px; font-weight: 600; color: #1e293b; min-width: 200px; }
         
         .item-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -39,22 +39,15 @@
         .sign-area { display: flex; align-items: center; gap: 15px; margin-top: 15px; background: #fafafa; padding: 12px; border-radius: 8px; border: 1px dashed #cbd5e1; width: fit-content; }
         .img-ttd { height: 55px; object-fit: contain; border: 1px solid #e2e8f0; background: white; padding: 2px; }
 
-        .btn-submit-all { background: #1e3a8a; color: white; width: 100%; padding: 14px; font-size: 15px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px; }
-
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; padding: 15px; z-index: 9999; }
-        .modal-content { background: white; width: 100%; max-width: 360px; padding: 25px; border-radius: 20px; text-align: center; }
-        .canvas-wrap { position: relative; width: 100%; height: 180px; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; margin: 15px 0; overflow: hidden; }
-        .stempel-overlay { position: absolute; left: 20px; top: 25px; width: 120px; height: 120px; object-fit: contain; opacity: 0.85; z-index: 10; pointer-events: none; display: none; }
-        canvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index: 1; }
-        .btn-upload-cap { background: #f1f5f9; color: #475569; position: relative; display: inline-block; padding: 8px 14px; font-size: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; border: 1px solid #cbd5e1; }
-        .btn-upload-cap input { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+        .btn-submit-all { background: #059669; color: white; width: 100%; padding: 14px; font-size: 15px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px; transition: background 0.3s; }
+        .btn-submit-all:hover { background: #047857; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="main-header">
-        <h1>Panel Verifikasi & Pengesahan Perangkat</h1>
+        <h1>Panel Verifikasi & Pemeriksaan Kurikulum</h1>
         <p style="color: #64748b; font-size: 13px; margin-top: 4px;">SMAN 15 Maluku Tengah</p>
     </div>
 
@@ -65,31 +58,8 @@
         </select>
     </div>
 
-    <div id="loading-info" style="text-align: center; font-weight: bold; color: var(--primary); display:none;"><i class="fa-solid fa-sync fa-spin"></i> Membaca basis data berkas...</div>
+    <div id="loading-info" style="text-align: center; font-weight: bold; color: var(--primary); display:none;"><i class="fa-solid fa-sync fa-spin"></i> Memproses basis data berkas...</div>
     <div id="mainDashboard"></div>
-</div>
-
-<div id="modalTTD" class="modal">
-    <div class="modal-content">
-        <h3 style="color: var(--primary); font-weight: 800;">Pengesahan Dokumen</h3>
-        <p style="font-size: 12px; color: #64748b; margin-top: 4px;">Pasang Cap stempel terlebih dahulu, lalu bubuhkan goresan TTD digital.</p>
-        
-        <div class="canvas-wrap">
-            <img id="cap-img" class="stempel-overlay" src="" alt="Cap Sekolah">
-            <canvas id="canvasKepsek"></canvas>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <div class="btn-upload-cap">
-                <i class="fa-solid fa-stamp"></i> 1. Pasang Cap
-                <input type="file" accept="image/*" onchange="prosesPasangCap(event)">
-            </div>
-            <button type="button" style="background:#ef4444; color:white; border:none; padding:6px 12px; font-size:11px; border-radius:6px; font-weight: bold;" onclick="bersihkanKanvasKepsek()">Hapus TTD</button>
-        </div>
-
-        <button class="btn-submit-all" style="background:#059669; margin-top:0;" onclick="kirimPenerbitanKepsek()">2. <i class="fa-solid fa-cloud-arrow-up"></i> Sahkan & Terbitkan</button>
-        <button class="btn-submit-all" style="background:#94a3b8; margin-top:6px; padding:10px;" onclick="tutupModalTTD()">Batalkan</button>
-    </div>
 </div>
 
 <script>
@@ -98,11 +68,7 @@
     let masterBerkas = [];
     let dataTerpilih = null;
     let statusItemKondisional = {}; 
-    const canvas = document.getElementById('canvasKepsek');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
 
-    // Nama perangkat dibatasi 11 baris agar sinkron dengan layout Anda
     const namaPerangkat = [
         "1. Kalender Pendidikan", "2. Alokasi Minggu Efektif", "3. Jadwal Mengajar", 
         "4. CP dan ATP", "5. Program Tahunan", "6. Program Semester", 
@@ -110,34 +76,24 @@
         "10. Jurnal Guru", "11. Daftar Nilai & Absensi"
     ];
 
-    // 1. MEMBACA BASIS DATA SAAT HALAMAN DIBUKA
     function ambilDataSpreadsheet() {
-        if(document.getElementById('loading-info')) {
-            document.getElementById('loading-info').style.display = 'block';
-        }
+        document.getElementById('loading-info').style.display = 'block';
         fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "ambilSemuaData" }) })
         .then(res => res.json()).then(res => {
-            if(document.getElementById('loading-info')) {
-                document.getElementById('loading-info').style.display = 'none';
-            }
+            document.getElementById('loading-info').style.display = 'none';
             if(res.status === "success") { 
-                masterGuru = res.daftarGuru || [];   // Bersumber dari Sheet 1 Kolom A
-                masterBerkas = res.dataBerkas || []; // Record pengumpulan berkas guru
-                
+                masterGuru = res.daftarGuru || [];   
+                masterBerkas = res.dataBerkas || []; 
                 isiDropdownGuruSederhana(masterGuru);
             }
-        }).catch(err => {
-            console.error("Gagal memuat data spreadsheet:", err);
-        });
+        }).catch(err => console.error("Gagal sinkron data server:", err));
     }
 
-    // 2. ISI DROPDOWN GURU PERTAMA KALI (URUT ABJAD)
     function isiDropdownGuruSederhana(daftarGuru) {
         const selectGuru = document.getElementById('filterGuru');
         if(!selectGuru) return;
         selectGuru.innerHTML = '<option value="">-- Silahkan Pilih Guru --</option>';
         
-        // Sorting abjad A-Z berdasarkan nama guru
         daftarGuru.sort((a, b) => {
             let namaA = a.nama || a.namaGuru || "";
             let namaB = b.nama || b.namaGuru || "";
@@ -152,34 +108,30 @@
         });
     }
 
-    // 3. AMBIL DATA DAN LANGSUNG RENDERING FORMULIR DETAIL VERIFIKASI
     function pilihGuruLangsung(namaGuru) {
         const wadah = document.getElementById('mainDashboard');
         if(!wadah) return;
-        
         if(!namaGuru) { wadah.innerHTML = ""; return; }
         
-        // Cari profil guru di data master dan log berkas secara fleksibel
         let profilGuru = masterGuru.find(g => (g.nama === namaGuru || g.namaGuru === namaGuru)) || {};
         let dataGuru = masterBerkas.find(d => (d.namaGuru === namaGuru || d.nama === namaGuru));
 
         statusItemKondisional = {}; 
+        dataTerpilih = dataGuru; // Menyimpan data baris guru aktif untuk proses pemindahan sheet
         
         let infoMapel = dataGuru ? dataGuru.mapel : (profilGuru.mapel || "-");
         let infoKelas = dataGuru ? dataGuru.kelas : (profilGuru.kelas || "-");
         let infoStatus = dataGuru ? (dataGuru.status || 'Menunggu Verifikasi') : 'Belum Mengumpulkan Berkas';
 
-        // Mulai membuat layout kartu review guru
         let cardHtml = `
             <div class="guru-box">
                 <div class="guru-info">
                     <h3>${namaGuru}</h3>
                     <p style="font-size:13px; color:#64748b; font-weight:600; margin-top:4px;">Mata Pelajaran: ${infoMapel} | Kelas: ${infoKelas}</p>
-                    <p style="font-size:12px; color:${dataGuru ? '#2563eb' : '#94a3b8'}; font-weight:bold; margin-top:4px;">Status Global: ${infoStatus}</p>
+                    <p id="global-status-text" style="font-size:12px; color:${dataGuru ? '#2563eb' : '#94a3b8'}; font-weight:bold; margin-top:4px;">Status Global: ${infoStatus}</p>
                 </div>
         `;
 
-        // Jika Guru belum pernah mengumpulkan data sama sekali
         if (!dataGuru) {
             cardHtml += `
                 <div style="text-align:center; padding: 35px 20px; color:#94a3b8; font-weight:bold;">
@@ -193,7 +145,6 @@
         
         cardHtml += `<div class="links-list">`;
                     
-        // Loop Berkas Administrasi dibatasi hanya sampai 11 sesuai aplikasi Anda
         for(let i = 1; i <= 11; i++) {
             let linkUrl = dataGuru["link" + i];
             if(linkUrl && linkUrl.toString().trim() !== "") {
@@ -209,7 +160,7 @@
                             ${isFiks ? `<a href="${displayLink}" class="btn-view" target="_blank"><i class="fa-solid fa-magnifying-glass"></i> Periksa Berkas</a>` : ''}
                             <span class="item-status" id="status-label-${i}" style="color:${colorStatus};">${textStatus}</span>
                             <button class="btn-check" onclick="aksiItemFiks(${i})"><i class="fa-solid fa-check"></i> Fiks</button>
-                            <button class="btn-reject" onclick="aksiItemTolak(${i}, '${dataGuru.namaGuru || namaGuru}', ${dataGuru.idBaris})"><i class="fa-solid fa-times"></i> Tolak</button>
+                            <button class="btn-reject" onclick="aksiItemTolak(${i}, '${dataGuru.namaGuru}', ${dataGuru.idBaris})"><i class="fa-solid fa-times"></i> Tolak</button>
                         </div>
                     </div>
                 `;
@@ -236,24 +187,30 @@
             `;
         }
         
+        // REVISI TOMBOL AKSI: Mengirim data ke sheet kepsek khusus
         cardHtml += `
-            <button class="btn-submit-all" onclick="bukaLayarTTDKepsek('${dataGuru.namaGuru || namaGuru}', ${dataGuru.idBaris})">
-                <i class="fa-solid fa-file-signature"></i> Langkah Akhir: Kepala Sekolah TTD & Terbitkan
+            <button class="btn-submit-all" onclick="ajukanKeKepsek()">
+                <i class="fa-solid fa-paper-plane"></i> Ajukan untuk di Cap dan Tanda Tangan Kepsek
             </button>
         </div>`;
         
         wadah.innerHTML = cardHtml;
     }
 
-    // 4. FUNGSI VERIFIKASI ITEM OK (FIKS)
     function aksiItemFiks(indexBox) {
         statusItemKondisional[indexBox] = "fiks";
-        document.getElementById(`status-label-${indexBox}`).innerText = "FIKS (Disetujui)";
-        document.getElementById(`status-label-${indexBox}`).style.color = "#10b981";
+        const labelStatus = document.getElementById(`status-label-${indexBox}`);
+        labelStatus.innerText = "FIKS (Disetujui)";
+        labelStatus.style.color = "#10b981";
         document.getElementById(`box-item-${indexBox}`).style.backgroundColor = "#f0fdf4";
+
+        const globalStatus = document.getElementById("global-status-text");
+        if(globalStatus) {
+            globalStatus.innerText = "Status Global: Berkas Semuanya Fiks & Siap Diajukan";
+            globalStatus.style.color = "#10b981";
+        }
     }
 
-    // 5. FUNGSI VERIFIKASI ITEM DITOLAK (REVISI + CATATAN)
     function aksiItemTolak(indexBox, namaGuru, idBaris) {
         let catatan = prompt("Masukkan Catatan Koreksi/Kekurangan Untuk Perangkat Ini:");
         if (catatan === null || catatan.trim() === "") return;
@@ -274,54 +231,34 @@
         });
     }
 
-    // 6. FUNGSI DOCKING MODAL SCREEN CANVAS TANDA TANGAN
-    function bukaLayarTTDKepsek(nama, id) {
-        dataTerpilih = { namaGuru: nama, idBaris: id };
-        document.getElementById('modalTTD').style.display = 'flex';
-        canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
-        ctx.lineWidth = 4; ctx.lineCap = "round"; ctx.strokeStyle = "#1e3a8a";
-        
-        canvas.addEventListener('touchstart', (e) => { drawing = true; const p = dapatkanPosisiSentuh(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); });
-        canvas.addEventListener('touchmove', (e) => { if(!drawing) return; const p = dapatkanPosisiSentuh(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); });
-        canvas.addEventListener('touchend', () => drawing = false);
-    }
+    // FUNGSI UTAMA BARU: Mengirim Baris Berkas Terpilih Ke Ranah Sheet "kepsek"
+    function ajukanKeKepsek() {
+        if(!dataTerpilih) { alert("Data perangkat belum siap."); return; }
+        if(!confirm("Kirim data berkas yang sudah fiks ini ke lembar kerja Kepala Sekolah untuk disahkan?")) return;
 
-    function dapatkanPosisiSentuh(e) { 
-        const r = canvas.getBoundingClientRect(); 
-        return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top }; 
-    }
+        document.getElementById('loading-info').style.display = 'block';
 
-    function prosesPasangCap(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.getElementById('cap-img');
-                img.src = event.target.result; img.style.display = 'block';
-            }
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function bersihkanKanvasKepsek() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-    function tutupModalTTD() { document.getElementById('modalTTD').style.display = 'none'; document.getElementById('cap-img').style.display = 'none'; bersihkanKanvasKepsek(); }
-
-    // 7. FUNGSI KIRIM HASIL FINALISASI KE SPREADSHEET
-    function kirimPenerbitanKepsek() {
-        if(!confirm("Terbitkan berkas administrasi guru ini secara resmi?")) return;
-        const dataGambarTTD = canvas.toDataURL();
-        
         fetch(SCRIPT_URL, {
             method: "POST",
             body: JSON.stringify({
-                action: "updateStatus", namaGuru: dataTerpilih.namaGuru, idBaris: dataTerpilih.idBaris, status: "Diterbitkan", ttdKepsek: dataGambarTTD
+                action: "ajukanKeKepsek",
+                dataGuru: dataTerpilih
             })
-        }).then(() => {
-            alert("Administrasi Belajar Berhasil Disahkan & Diterbitkan!");
-            tutupModalTTD(); 
-            document.getElementById('filterGuru').value = "";
-            document.getElementById('mainDashboard').innerHTML = "";
-            ambilDataSpreadsheet();
+        })
+        .then(res => res.json())
+        .then(res => {
+            document.getElementById('loading-info').style.display = 'none';
+            if(res.status === "success") {
+                alert("Sukses! Berkas fiks berhasil diteruskan ke sheet 'kepsek'.");
+                document.getElementById('filterGuru').value = "";
+                document.getElementById('mainDashboard').innerHTML = "";
+                ambilDataSpreadsheet();
+            } else {
+                alert("Terjadi kendala pengiriman: " + res.message);
+            }
+        }).catch(() => {
+            document.getElementById('loading-info').style.display = 'none';
+            alert("Koneksi gagal terhubung ke server Google Apps Script.");
         });
     }
 
