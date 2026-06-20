@@ -54,7 +54,7 @@
 
         .main-layout {
             display: grid;
-            grid-template-columns: 350px 1fr;
+            grid-template-columns: 380px 1fr;
             gap: 25px;
             width: 100%;
             max-width: 1200px;
@@ -115,19 +115,19 @@
             border-color: var(--accent-color);
         }
 
-        /* GRID PANEL DOKUMEN */
+        /* GRID PANEL DOKUMEN (SINKRON 11 PERANGKAT LENGKAP) */
         .panels-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 15px;
         }
 
         .panel-btn {
             background: #0f172a;
             border: 1px solid #334155;
             border-radius: 12px;
-            padding: 15px;
+            padding: 12px 10px;
             color: var(--text-main);
             text-align: left;
             cursor: pointer;
@@ -144,18 +144,22 @@
         }
 
         .panel-btn:disabled {
-            opacity: 0.4;
+            opacity: 0.25;
             cursor: not-allowed;
+            border-color: #1e293b;
         }
 
         .panel-btn i {
-            font-size: 18px;
+            font-size: 16px;
             color: #38bdf8;
         }
 
         .panel-btn span {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         /* AREA VIEWER KANAN */
@@ -167,7 +171,7 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
-            min-height: 600px;
+            min-height: 650px;
         }
 
         .viewer-header {
@@ -235,8 +239,8 @@
 </head>
 <body>
 
-    <a href="index.html" class="back-nav">
-        <i class="fa-solid fa-arrow-left"></i> Kembali ke Awal
+    <a href="dashbor.html" class="back-nav">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard
     </a>
 
     <div class="main-layout">
@@ -272,29 +276,38 @@
             </div>
 
             <div class="panels-grid">
-                <button class="panel-btn" onclick="tampilkanFile('kaldik')" disabled id="btn-kaldik">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <span>Kaldik</span>
+                <button class="panel-btn" onclick="tampilkanFile('link1')" disabled id="btn-link1">
+                    <i class="fa-solid fa-calendar-days"></i> <span>1. Kaldik</span>
                 </button>
-                <button class="panel-btn" onclick="tampilkanFile('jadwal')" disabled id="btn-jadwal">
-                    <i class="fa-solid fa-clock"></i>
-                    <span>Jadwal</span>
+                <button class="panel-btn" onclick="tampilkanFile('link2')" disabled id="btn-link2">
+                    <i class="fa-solid fa-ビジネス-time"></i> <span>2. Minggu Efektif</span>
                 </button>
-                <button class="panel-btn" onclick="tampilkanFile('atp')" disabled id="btn-atp">
-                    <i class="fa-solid fa-route"></i>
-                    <span>ATP</span>
+                <button class="panel-btn" onclick="tampilkanFile('link3')" disabled id="btn-link3">
+                    <i class="fa-solid fa-clock"></i> <span>3. Jadwal Mengajar</span>
                 </button>
-                <button class="panel-btn" onclick="tampilkanFile('silabus')" disabled id="btn-silabus">
-                    <i class="fa-solid fa-scroll"></i>
-                    <span>Silabus</span>
+                <button class="panel-btn" onclick="tampilkanFile('link4')" disabled id="btn-link4">
+                    <i class="fa-solid fa-route"></i> <span>4. CP & ATP</span>
                 </button>
-                <button class="panel-btn" onclick="tampilkanFile('prota')" disabled id="btn-prota">
-                    <i class="fa-solid fa-calendar-check"></i>
-                    <span>Prota</span>
+                <button class="panel-btn" onclick="tampilkanFile('link5')" disabled id="btn-link5">
+                    <i class="fa-solid fa-calendar-check"></i> <span>5. Prota</span>
                 </button>
-                <button class="panel-btn" onclick="tampilkanFile('prosem')" disabled id="btn-prosem">
-                    <i class="fa-solid fa-business-time"></i>
-                    <span>Prosem</span>
+                <button class="panel-btn" onclick="tampilkanFile('link6')" disabled id="btn-link6">
+                    <i class="fa-solid fa-business-time"></i> <span>6. Prosem</span>
+                </button>
+                <button class="panel-btn" onclick="tampilkanFile('link7')" disabled id="btn-link7">
+                    <i class="fa-solid fa-scroll"></i> <span>7. RPP / Modul</span>
+                </button>
+                <button class="panel-btn" onclick="tampilkanFile('link8')" disabled id="btn-link8">
+                    <i class="fa-solid fa-check-double"></i> <span>8. KKTP</span>
+                </button>
+                <button class="panel-btn" onclick="tampilkanFile('link9')" disabled id="btn-link9">
+                    <i class="fa-solid fa-file-lines"></i> <span>9. Kisi Soal</span>
+                </button>
+                <button class="panel-btn" onclick="tampilkanFile('link10')" disabled id="btn-link10">
+                    <i class="fa-solid fa-book"></i> <span>10. Jurnal Guru</span>
+                </button>
+                <button class="panel-btn" onclick="tampilkanFile('link11')" disabled id="btn-link11">
+                    <i class="fa-solid fa-list-check"></i> <span>11. Daftar Nilai</span>
                 </button>
             </div>
         </div>
@@ -325,136 +338,147 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUqDFah-9tizVmXWkR2MOjjSXT8zZdwZEUs_WqyD9vzjXEQXUydgaNJf58EFQPmpZF/exec";
-        let listRiwayatGuruTerpilih = [];
+        // SCRIPT URL disesuaikan dengan pengolahan sistem POST/GET database Anda
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgSyvm6G-STS2t6KwoC0Z7tXu6Xfu8wAyE5FkJrQ475mPD3KPDklHjd7VWyjZsFMXQ/exec";
+        let masterGuru = [];
+        let masterBerkas = [];
         let dataCocokDitemukan = null;
 
-        // 1. AMBIL DATA UNTUK DROPDOWN AWAL (DARI SHEET1)
+        const namaPerangkat = [
+            "1. Kalender Pendidikan", "2. Alokasi Minggu Efektif", "3. Jadwal Mengajar", 
+            "4. CP dan ATP", "5. Program Tahunan", "6. Program Semester", 
+            "7. RPP / Modul Ajar", "8. KKTP", "9. Kisi-Kisi Soal", 
+            "10. Jurnal Guru", "11. Daftar Nilai & Absensi"
+        ];
+
+        // 1. MEMBUAT FILTER AWAL LEWAT DATABASE UTAMA (SINKRON SPREADSHEET)
         document.addEventListener("DOMContentLoaded", function() {
-            fetch(`${WEB_APP_URL}?aksi=loadDropdown`)
+            fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "ambilSemuaData" }) })
             .then(res => res.json())
-            .then(data => {
-                if(data) {
+            .then(res => {
+                if(res.status === "success") {
+                    masterGuru = res.daftarGuru || [];
+                    masterBerkas = res.dataBerkas || [];
+                    
+                    // Urutkan nama guru abjad A-Z
+                    masterGuru.sort((a, b) => a.nama.localeCompare(b.nama));
+                    
                     document.getElementById('namaGuru').innerHTML = '<option value="" disabled selected>-- Pilih Guru --</option>' + 
-                        data.guru.map(g => `<option value="${g}">${g}</option>`).join('');
+                        masterGuru.map(g => `<option value="${g.nama}">${g.nama}</option>`).join('');
                 }
             }).catch(err => {
-                console.error("Gagal load data dropdown:", err);
-                document.getElementById('namaGuru').innerHTML = '<option value="" disabled>Gagal memuat server</option>';
+                console.error("Gagal load data database:", err);
+                document.getElementById('namaGuru').innerHTML = '<option value="" disabled>Gagal terhubung server</option>';
             });
         });
 
-        // 2. KETIKA NAMA GURU DIPILIH, CARI SHEET SESUAI GURU TERSEBUT
+        // 2. KETIKA NAMA GURU DIPILIH, INPUT OPTION MAPEL & KELAS DINAMIS
         function ambilDataPerangkatGuru() {
-            const guru = document.getElementById('namaGuru').value;
+            const guruDipilih = document.getElementById('namaGuru').value;
             const selectMapel = document.getElementById('mataPelajaran');
             const selectKelas = document.getElementById('kelas');
             
             resetViewer();
             nonaktifkanSemuaPanel();
 
-            selectMapel.innerHTML = '<option value="" disabled selected>Memuat mapel...</option>';
-            selectKelas.innerHTML = '<option value="" disabled selected>Memuat kelas...</option>';
-            selectMapel.disabled = true;
-            selectKelas.disabled = true;
+            // Saring seluruh record berkas guru yang cocok di database
+            let berkasGuru = masterBerkas.filter(d => d.namaGuru === guruDipilih);
+            let profilGuru = masterGuru.find(g => g.nama === guruDipilih) || {};
 
-            // Panggil riwayat baris dari sheet guru terkait
-            fetch(`${WEB_APP_URL}?aksi=ambilRiwayatGuru&namaGuru=${encodeURIComponent(guru)}`)
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success" && data.rows && data.rows.length > 0) {
-                    listRiwayatGuruTerpilih = data.rows; // Simpan semua baris dari sheet guru ini
+            if(berkasGuru.length > 0) {
+                let mapelUnik = [...new Set(berkasGuru.map(r => r.mapel).filter(m => m))];
+                let kelasUnik = [...new Set(berkasGuru.map(r => r.kelas).filter(k => k))];
 
-                    // Ekstrak data unik Mapel dan Kelas yang ada di sheet guru tersebut
-                    let mapelUnik = [...new Set(data.rows.map(r => r.mapel))];
-                    let kelasUnik = [...new Set(data.rows.map(r => r.kelas))];
+                selectMapel.innerHTML = '<option value="" disabled selected>-- Pilih Mapel --</option>' + 
+                    mapelUnik.map(m => `<option value="${m}">${m}</option>`).join('');
+                
+                selectKelas.innerHTML = '<option value="" disabled selected>-- Pilih Kelas --</option>' + 
+                    kelasUnik.map(k => `<option value="${k}">${k}</option>`).join('');
 
-                    selectMapel.innerHTML = '<option value="" disabled selected>-- Pilih Mapel --</option>' + 
-                        mapelUnik.map(m => `<option value="${m}">${m}</option>`).join('');
-                    
-                    selectKelas.innerHTML = '<option value="" disabled selected>-- Pilih Kelas --</option>' + 
-                        kelasUnik.map(k => `<option value="${k}">${k}</option>`).join('');
-
-                    selectMapel.disabled = false;
-                    selectKelas.disabled = false;
-                } else {
-                    listRiwayatGuruTerpilih = [];
-                    selectMapel.innerHTML = '<option value="" disabled>Data tidak ditemukan</option>';
-                    selectKelas.innerHTML = '<option value="" disabled>Data tidak ditemukan</option>';
-                }
-            }).catch(err => {
-                console.error("Gagal mengambil data sheet guru:", err);
-            });
+                selectMapel.disabled = false;
+                selectKelas.disabled = false;
+            } else {
+                // Kasus jika guru ada di Sheet1 master tapi belum pernah mengisi berkas
+                selectMapel.innerHTML = `<option value="${profilGuru.mapel || '-'}">${profilGuru.mapel || '-'}</option>`;
+                selectKelas.innerHTML = `<option value="${profilGuru.kelas || '-'}">${profilGuru.kelas || '-'}</option>`;
+                selectMapel.disabled = true;
+                selectKelas.disabled = true;
+                alert("Guru yang bersangkutan terdaftar, namun belum mengumpulkan berkas perangkat apapun.");
+            }
         }
 
-        // 3. COCOKKAN PILIHAN GURU, MAPEL, DAN KELAS UNTUK VALIDASI BARIS
+        // 3. COCOKKAN KOMBINASI FILTER AKHIR UNTUK MEMBUKA AKSES TOMBOL PANEL
         function validasiKombinasiFilter() {
-            const mapel = document.getElementById('mataPelajaran').value;
-            const kelas = document.getElementById('kelas').value;
+            const guruDipilih = document.getElementById('namaGuru').value;
+            const mapelDipilih = document.getElementById('mataPelajaran').value;
+            const kelasDipilih = document.getElementById('kelas').value;
 
-            if(!mapel || !kelas) return;
+            if(!guruDipilih || !mapelDipilih || !kelasDipilih) return;
 
-            // Cari baris di mana mapel dan kelasnya klop/cocok
-            const hasilCari = listRiwayatGuruTerpilih.find(r => r.mapel === mapel && r.kelas === kelas);
+            // Cari data record spesifik baris guru yang klop
+            const hasilCari = masterBerkas.find(r => r.namaGuru === guruDipilih && r.mapel === mapelDipilih && r.kelas === kelasDipilih);
 
             if(hasilCari) {
-                dataCocokDitemukan = hasilCari; // Ambil baris objek link-linknya
+                dataCocokDitemukan = hasilCari;
                 aktifkanPanelTersedia(hasilCari);
             } else {
                 dataCocokDitemukan = null;
                 nonaktifkanSemuaPanel();
-                alert("Kombinasi Mata Pelajaran dan Kelas ini belum terdaftar di database.");
             }
         }
 
-        // 4. AKTIFKAN PANEL JIKA LINK DI KOLOM TERKAIT TIDAK KOSONG
+        // 4. AKTIFKAN PANEL HANYA JIKA FIELD LINK BERKAS TERISI (ANTI CRASH)
         function aktifkanPanelTersedia(row) {
-            const listKey = ['kaldik', 'jadwal', 'atp', 'silabus', 'prota', 'prosem'];
-            listKey.forEach(key => {
-                const btn = document.getElementById(`btn-${key}`);
-                if(row[key] && row[key].toString().trim().startsWith('http')) {
+            for(let i = 1; i <= 11; i++) {
+                const btn = document.getElementById(`btn-link${i}`);
+                let urlLink = row["link" + i];
+                
+                if(urlLink && urlLink.toString().trim().startsWith('http') && !urlLink.toString().startsWith('DITOLAK:')) {
                     btn.disabled = false;
                 } else {
                     btn.disabled = true;
                 }
-            });
+            }
         }
 
         function nonaktifkanSemuaPanel() {
-            ['kaldik', 'jadwal', 'atp', 'silabus', 'prota', 'prosem'].forEach(key => {
-                document.getElementById(`btn-${key}`).disabled = true;
-            });
+            for(let i = 1; i <= 11; i++) {
+                document.getElementById(`btn-link${i}`).disabled = true;
+            }
         }
 
-        // 5. TAMPILKAN FILE DI AREA IFRAME VIEWER KANAN
-        function tampilkanFile(jenisPerangkat) {
+        // 5. EMBED & TAMPILKAN FILE SECARA INSTAN KE AREA VIEWER (IFRAME)
+        function tampilkanFile(keyLink) {
             if(!dataCocokDitemukan) return;
 
-            let urlAsli = dataCocokDitemukan[jenisPerangkat];
+            let urlAsli = dataCocokDitemukan[keyLink];
             if(!urlAsli) return;
 
             const iframe = document.getElementById('pdfViewer');
             const placeholder = document.getElementById('placeholderText');
             const loader = document.getElementById('loadingStatus');
-            const btnEksternal = document.getElementById('btnBukaEksternal');
+            const btnExternal = document.getElementById('btnBukaEksternal');
 
-            // Ubah link standar Google Drive agar bisa masuk/embed di iframe web preview
+            // Ekstrak index nomor untuk memunculkan judul perangkat secara rapi
+            let indexNo = parseInt(keyLink.replace('link', '')) - 1;
+            let teksJudul = namaPerangkat[indexNo];
+
+            // Konversi link Google Docs/Drive biasa agar aman saat di-embed di iframe
             let urlEmbed = urlAsli;
             if (urlAsli.includes("drive.google.com/file/d/")) {
                 let fileId = urlAsli.split("/file/d/")[1].split("/")[0];
                 urlEmbed = `https://drive.google.com/file/d/${fileId}/preview`;
+            } else if (urlAsli.includes("docs.google.com/document/d/")) {
+                let docId = urlAsli.split("/document/d/")[1].split("/")[0];
+                urlEmbed = `https://docs.google.com/document/d/${docId}/preview`;
             }
 
-            // Atur teks header informasi judul
-            const namaPerangkat = jenisPerangkat.toUpperCase();
-            document.getElementById('txtJudulDokumen').innerText = `Berkas: ${namaPerangkat}`;
-            document.getElementById('txtSubJudulDokumen').innerText = `${dataCocokDitemukan.nama} | ${dataCocokDitemukan.mapel} | Kelas ${dataCocokDitemukan.kelas}`;
+            document.getElementById('txtJudulDokumen').innerText = teksJudul;
+            document.getElementById('txtSubJudulDokumen').innerText = `${dataCocokDitemukan.namaGuru} | ${dataCocokDitemukan.mapel} | ${dataCocokDitemukan.kelas}`;
 
-            // Munculkan tombol link eksternal jika pengguna ingin download/buka tab baru
-            btnEksternal.href = urlAsli;
-            btnEksternal.style.display = "block";
+            btnExternal.href = urlAsli;
+            btnExternal.style.display = "block";
 
-            // Proses Loading dan sembunyikan placeholder
             placeholder.style.display = "none";
             iframe.style.display = "none";
             loader.style.display = "block";
