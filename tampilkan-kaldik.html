@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewer Administrasi Perangkat Guru</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-page: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: #1e293b;
+            --accent-color: #3a86ff;
+            --accent-success: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-page);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .back-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+            align-self: flex-start;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .back-nav:hover {
+            color: var(--text-main);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* PANEL FILTER KIRI */
+        .filter-card {
+            background: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            height: fit-content;
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #d1d5db;
+        }
+
+        .control-group select {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #475569;
+            background: #1e293b;
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.3s;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .control-group select:focus {
+            border-color: var(--accent-color);
+        }
+
+        /* GRID PANEL DOKUMEN */
+        .panels-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .panel-btn {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 15px;
+            color: var(--text-main);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .panel-btn:hover:not(:disabled) {
+            border-color: var(--accent-color);
+            background: rgba(58, 134, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .panel-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .panel-btn i {
+            font-size: 18px;
+            color: #38bdf8;
+        }
+
+        .panel-btn span {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* AREA VIEWER KANAN */
+        .viewer-card {
+            background: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            min-height: 600px;
+        }
+
+        .viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .viewer-title h3 {
+            font-size: 16px;
+            color: #fff;
+        }
+        .viewer-title p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .btn-external {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: none;
+        }
+
+        .frame-container {
+            flex: 1;
+            background: #0f172a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid #334155;
+            position: relative;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: none;
+        }
+
+        .placeholder-text {
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 14px;
+            padding: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .panels-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="dashbor.html" class="back-nav">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard
+    </a>
+
+    <div class="main-layout">
+        
+        <div class="filter-card">
+            <div class="card-header">
+                <h2><i class="fa-solid fa-sliders"></i> Filter Perangkat</h2>
+            </div>
+            
+            <div class="control-group">
+                <label for="namaGuru">Nama Guru</label>
+                <select id="namaGuru" onchange="ambilDataPerangkatGuru()" required>
+                    <option value="" disabled selected>Memuat nama guru...</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="mataPelajaran">Mata Pelajaran</label>
+                <select id="mataPelajaran" onchange="validasiKombinasiFilter()" disabled>
+                    <option value="" disabled selected>Pilih Guru dahulu...</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="kelas">Kelas</label>
+                <select id="kelas" onchange="validasiKombinasiFilter()" disabled>
+                    <option value="" disabled selected>Pilih Guru dahulu...</option>
+                </select>
+            </div>
+
+            <div class="card-header" style="margin-top: 25px; margin-bottom: 10px;">
+                <h2><i class="fa-solid fa-folder-open"></i> Pilih Perangkat</h2>
+            </div>
+
+            <div class="panels-grid">
+                <button class="panel-btn" onclick="tampilkanFile('kaldik')" disabled id="btn-kaldik">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Kaldik</span>
+                </button>
+                <button class="panel-btn" onclick="tampilkanFile('jadwal')" disabled id="btn-jadwal">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>Jadwal</span>
+                </button>
+                <button class="panel-btn" onclick="tampilkanFile('atp')" disabled id="btn-atp">
+                    <i class="fa-solid fa-route"></i>
+                    <span>ATP</span>
+                </button>
+                <button class="panel-btn" onclick="tampilkanFile('silabus')" disabled id="btn-silabus">
+                    <i class="fa-solid fa-scroll"></i>
+                    <span>Silabus</span>
+                </button>
+                <button class="panel-btn" onclick="tampilkanFile('prota')" disabled id="btn-prota">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Prota</span>
+                </button>
+                <button class="panel-btn" onclick="tampilkanFile('prosem')" disabled id="btn-prosem">
+                    <i class="fa-solid fa-business-time"></i>
+                    <span>Prosem</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="viewer-card">
+            <div class="viewer-header">
+                <div class="viewer-title">
+                    <h3 id="txtJudulDokumen">Pratinjau Dokumen</h3>
+                    <p id="txtSubJudulDokumen">Silakan tentukan filter dan pilih panel perangkat administrasi.</p>
+                </div>
+                <a id="btnBukaEksternal" href="#" target="_blank" class="btn-external">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Tab Baru
+                </a>
+            </div>
+
+            <div class="frame-container">
+                <div id="loadingStatus" style="display: none; color: #3a86ff;">
+                    <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+                </div>
+                <div id="placeholderText" class="placeholder-text">
+                    <i class="fa-solid fa-file-pdf fa-3x" style="color: #475569; margin-bottom: 10px;"></i>
+                    <p>Tidak ada dokumen aktif yang sedang dibuka.</p>
+                </div>
+                <iframe id="pdfViewer" src=""></iframe>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwUqDFah-9tizVmXWkR2MOjjSXT8zZdwZEUs_WqyD9vzjXEQXUydgaNJf58EFQPmpZF/exec";
+        let listRiwayatGuruTerpilih = [];
+        let dataCocokDitemukan = null;
+
+        // 1. AMBIL DATA UNTUK DROPDOWN AWAL (DARI SHEET1)
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch(`${WEB_APP_URL}?aksi=loadDropdown`)
+            .then(res => res.json())
+            .then(data => {
+                if(data) {
+                    document.getElementById('namaGuru').innerHTML = '<option value="" disabled selected>-- Pilih Guru --</option>' + 
+                        data.guru.map(g => `<option value="${g}">${g}</option>`).join('');
+                }
+            }).catch(err => {
+                console.error("Gagal load data dropdown:", err);
+                document.getElementById('namaGuru').innerHTML = '<option value="" disabled>Gagal memuat server</option>';
+            });
+        });
+
+        // 2. KETIKA NAMA GURU DIPILIH, CARI SHEET SESUAI GURU TERSEBUT
+        function ambilDataPerangkatGuru() {
+            const guru = document.getElementById('namaGuru').value;
+            const selectMapel = document.getElementById('mataPelajaran');
+            const selectKelas = document.getElementById('kelas');
+            
+            resetViewer();
+            nonaktifkanSemuaPanel();
+
+            selectMapel.innerHTML = '<option value="" disabled selected>Memuat mapel...</option>';
+            selectKelas.innerHTML = '<option value="" disabled selected>Memuat kelas...</option>';
+            selectMapel.disabled = true;
+            selectKelas.disabled = true;
+
+            // Panggil riwayat baris dari sheet guru terkait
+            fetch(`${WEB_APP_URL}?aksi=ambilRiwayatGuru&namaGuru=${encodeURIComponent(guru)}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success" && data.rows && data.rows.length > 0) {
+                    listRiwayatGuruTerpilih = data.rows; // Simpan semua baris dari sheet guru ini
+
+                    // Ekstrak data unik Mapel dan Kelas yang ada di sheet guru tersebut
+                    let mapelUnik = [...new Set(data.rows.map(r => r.mapel))];
+                    let kelasUnik = [...new Set(data.rows.map(r => r.kelas))];
+
+                    selectMapel.innerHTML = '<option value="" disabled selected>-- Pilih Mapel --</option>' + 
+                        mapelUnik.map(m => `<option value="${m}">${m}</option>`).join('');
+                    
+                    selectKelas.innerHTML = '<option value="" disabled selected>-- Pilih Kelas --</option>' + 
+                        kelasUnik.map(k => `<option value="${k}">${k}</option>`).join('');
+
+                    selectMapel.disabled = false;
+                    selectKelas.disabled = false;
+                } else {
+                    listRiwayatGuruTerpilih = [];
+                    selectMapel.innerHTML = '<option value="" disabled>Data tidak ditemukan</option>';
+                    selectKelas.innerHTML = '<option value="" disabled>Data tidak ditemukan</option>';
+                }
+            }).catch(err => {
+                console.error("Gagal mengambil data sheet guru:", err);
+            });
+        }
+
+        // 3. COCOKKAN PILIHAN GURU, MAPEL, DAN KELAS UNTUK VALIDASI BARIS
+        function validasiKombinasiFilter() {
+            const mapel = document.getElementById('mataPelajaran').value;
+            const kelas = document.getElementById('kelas').value;
+
+            if(!mapel || !kelas) return;
+
+            // Cari baris di mana mapel dan kelasnya klop/cocok
+            const hasilCari = listRiwayatGuruTerpilih.find(r => r.mapel === mapel && r.kelas === kelas);
+
+            if(hasilCari) {
+                dataCocokDitemukan = hasilCari; // Ambil baris objek link-linknya
+                aktifkanPanelTersedia(hasilCari);
+            } else {
+                dataCocokDitemukan = null;
+                nonaktifkanSemuaPanel();
+                alert("Kombinasi Mata Pelajaran dan Kelas ini belum terdaftar di database.");
+            }
+        }
+
+        // 4. AKTIFKAN PANEL JIKA LINK DI KOLOM TERKAIT TIDAK KOSONG
+        function aktifkanPanelTersedia(row) {
+            const listKey = ['kaldik', 'jadwal', 'atp', 'silabus', 'prota', 'prosem'];
+            listKey.forEach(key => {
+                const btn = document.getElementById(`btn-${key}`);
+                if(row[key] && row[key].toString().trim().startsWith('http')) {
+                    btn.disabled = false;
+                } else {
+                    btn.disabled = true;
+                }
+            });
+        }
+
+        function nonaktifkanSemuaPanel() {
+            ['kaldik', 'jadwal', 'atp', 'silabus', 'prota', 'prosem'].forEach(key => {
+                document.getElementById(`btn-${key}`).disabled = true;
+            });
+        }
+
+        // 5. TAMPILKAN FILE DI AREA IFRAME VIEWER KANAN
+        function tampilkanFile(jenisPerangkat) {
+            if(!dataCocokDitemukan) return;
+
+            let urlAsli = dataCocokDitemukan[jenisPerangkat];
+            if(!urlAsli) return;
+
+            const iframe = document.getElementById('pdfViewer');
+            const placeholder = document.getElementById('placeholderText');
+            const loader = document.getElementById('loadingStatus');
+            const btnEksternal = document.getElementById('btnBukaEksternal');
+
+            // Ubah link standar Google Drive agar bisa masuk/embed di iframe web preview
+            let urlEmbed = urlAsli;
+            if (urlAsli.includes("drive.google.com/file/d/")) {
+                let fileId = urlAsli.split("/file/d/")[1].split("/")[0];
+                urlEmbed = `https://drive.google.com/file/d/${fileId}/preview`;
+            }
+
+            // Atur teks header informasi judul
+            const namaPerangkat = jenisPerangkat.toUpperCase();
+            document.getElementById('txtJudulDokumen').innerText = `Berkas: ${namaPerangkat}`;
+            document.getElementById('txtSubJudulDokumen').innerText = `${dataCocokDitemukan.nama} | ${dataCocokDitemukan.mapel} | Kelas ${dataCocokDitemukan.kelas}`;
+
+            // Munculkan tombol link eksternal jika pengguna ingin download/buka tab baru
+            btnEksternal.href = urlAsli;
+            btnEksternal.style.display = "block";
+
+            // Proses Loading dan sembunyikan placeholder
+            placeholder.style.display = "none";
+            iframe.style.display = "none";
+            loader.style.display = "block";
+
+            iframe.src = urlEmbed;
+            iframe.onload = function() {
+                loader.style.display = "none";
+                iframe.style.display = "block";
+            };
+        }
+
+        function resetViewer() {
+            document.getElementById('pdfViewer').style.display = "none";
+            document.getElementById('pdfViewer').src = "";
+            document.getElementById('placeholderText').style.display = "block";
+            document.getElementById('btnBukaEksternal').style.display = "none";
+            document.getElementById('txtJudulDokumen').innerText = "Pratinjau Dokumen";
+            document.getElementById('txtSubJudulDokumen').innerText = "Silakan tentukan filter dan pilih panel perangkat administrasi.";
+        }
+    </script>
+</body>
+</html>
