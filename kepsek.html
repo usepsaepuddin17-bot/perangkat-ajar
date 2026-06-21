@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Pengesahan Kepala Sekolah - SMAN 15</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #059669; --bg: #f0fdf4; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #f8fafc; padding: 20px; color: #334155; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .main-header { text-align: center; margin-bottom: 25px; }
+        .main-header h1 { color: var(--primary); font-weight: 800; font-size: 24px; }
+        
+        .filter-wrapper { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 25px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 8px; }
+        .filter-wrapper label { font-weight: 700; color: var(--primary); font-size: 14px; }
+        .filter-wrapper select { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #cbd5e1; font-size: 14px; font-weight: 600; color: #334155; outline: none; transition: border-color 0.2s; background-color: #ffffff; cursor: pointer; }
+        .filter-wrapper select:focus { border-color: #10b981; }
+
+        .guru-box { background: white; border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); padding: 25px; margin-bottom: 25px; border: 1px solid #e2e8f0; }
+        .guru-info { border-bottom: 2px dashed #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
+        .guru-info h3 { color: var(--primary); font-size: 20px; font-weight: 800; }
+        
+        .links-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .link-item { background: #f8fafc; padding: 14px 18px; border-radius: 10px; border: 1px solid #edf2f7; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .link-title { font-size: 14px; font-weight: 600; color: #1e293b; min-width: 200px; }
+        
+        .btn-view { color: #2563eb; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; background: #e0f2fe; padding: 6px 12px; border-radius: 6px; font-size: 12px; }
+        .btn-view:hover { background: #bae6fd; }
+
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; padding: 15px; z-index: 9999; }
+        .modal-content { background: white; width: 100%; max-width: 360px; padding: 25px; border-radius: 20px; text-align: center; }
+        .canvas-wrap { position: relative; width: 100%; height: 180px; background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px; margin: 15px 0; overflow: hidden; }
+        .stempel-overlay { position: absolute; left: 20px; top: 25px; width: 120px; height: 120px; object-fit: contain; opacity: 0.85; z-index: 10; pointer-events: none; display: none; }
+        canvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index: 1; cursor: crosshair; }
+        
+        .btn-upload-cap { background: #f1f5f9; color: #475569; position: relative; display: inline-block; padding: 8px 14px; font-size: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; border: 1px solid #cbd5e1; }
+        .btn-upload-cap input { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+        
+        .btn-submit-all { background: var(--primary); color: white; width: 100%; padding: 14px; font-size: 15px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="main-header">
+        <h1>Panel Pengesahan & TTD Kepala Sekolah</h1>
+        <p style="color: #64748b; font-size: 13px; margin-top: 4px;">SMAN 15 Maluku Tengah</p>
+    </div>
+
+    <div class="filter-wrapper">
+        <label for="filterGuruKepsek"><i class="fa-solid fa-folder-check"></i> Pilih Berkas Guru Yang Siap Disahkan:</label>
+        <select id="filterGuruKepsek" onchange="tampilkanBerkasPilihan(this.value)">
+            <option value="">-- Memuat daftar pengajuan... --</option>
+        </select>
+    </div>
+
+    <div id="loading-kepsek" style="text-align: center; font-weight: bold; color: var(--primary); display:none;"><i class="fa-solid fa-sync fa-spin"></i> Menghubungkan ke server...</div>
+    <div id="dashboardKepsek"></div>
+</div>
+
+<div id="modalTTD" class="modal">
+    <div class="modal-content">
+        <h3 style="color: var(--primary); font-weight: 800;">Pengesahan Kepala Sekolah</h3>
+        <p style="font-size: 12px; color: #64748b; margin-top: 4px;">Upload gambar stempel (PNG Transparan disarankan), lalu goreskan TTD digital Anda.</p>
+        
+        <div class="canvas-wrap">
+            <img id="cap-img" class="stempel-overlay" src="" alt="Cap Sekolah">
+            <canvas id="canvasKepsek"></canvas>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="btn-upload-cap">
+                <i class="fa-solid fa-stamp"></i> 1. Pasang Cap Stempel
+                <input type="file" accept="image/*" onchange="prosesPasangCap(event)">
+            </div>
+            <button type="button" style="background:#ef4444; color:white; border:none; padding:6px 12px; font-size:11px; border-radius:6px; font-weight: bold; cursor:pointer;" onclick="bersihkanKanvas()">Hapus TTD</button>
+        </div>
+
+        <button class="btn-submit-all" onclick="prosesSahkanDanKirim()">2. <i class="fa-solid fa-cloud-arrow-up"></i> Sahkan & Terbitkan</button>
+        <button class="btn-submit-all" style="background:#94a3b8; margin-top:6px; padding:10px;" onclick="tutupModalTTD()">Batalkan</button>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgSyvm6G-STS2t6KwoC0Z7tXu6Xfu8wAyE5FkJrQ475mPD3KPDklHjd7VWyjZsFMXQ/exec";
+    let dataPengajuanKepsek = [];
+    let dataTerpilih = null;
+    
+    const canvas = document.getElementById('canvasKepsek');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    const namaPerangkat = [
+        "1. Kalender Pendidikan", "2. Alokasi Minggu Efektif", "3. Jadwal Mengajar", 
+        "4. CP dan ATP", "5. Program Tahunan", "6. Program Semester", 
+        "7. RPP / Modul Ajar", "8. KKTP", "9. Kisi-Kisi Soal", 
+        "10. Jurnal Guru", "11. Daftar Nilai & Absensi"
+    ];
+
+    // Ambil data khusus dari sheet "kepsek" melalui API Apps Script tambahan yang akan kita siapkan
+    function ambilDataSheetKepsek() {
+        document.getElementById('loading-kepsek').style.display = 'block';
+        
+        // Memakai parameter khusus untuk membedakan pembacaan sheet kepsek
+        fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ action: "ambilDataKepsek" }) })
+        .then(res => res.json()).then(res => {
+            document.getElementById('loading-kepsek').style.display = 'none';
+            if(res.status === "success") {
+                dataPengajuanKepsek = res.data || [];
+                isiDropdownKepsek(dataPengajuanKepsek);
+            }
+        }).catch(err => alert("Gagal memuat data pengajuan Kepsek. Pastikan Backend Apps Script sudah di-update."));
+    }
+
+    function isiDropdownKepsek(data) {
+        const select = document.getElementById('filterGuruKepsek');
+        select.innerHTML = '<option value="">-- Silahkan Pilih Berkas Guru --</option>';
+        
+        // Hanya tampilkan yang berstatus Menunggu TTD Kepsek
+        const filtered = data.filter(item => item.statusPengesahan === "Menunggu TTD Kepsek");
+        
+        if(filtered.length === 0) {
+            select.innerHTML = '<option value="">[ Tidak ada pengajuan berkas baru ]</option>';
+            return;
+        }
+
+        filtered.forEach((item, index) => {
+            select.innerHTML += `<option value="${index}">${item.namaGuru} - (${item.mapel})</option>`;
+        });
+    }
+
+    function tampilkanBerkasPilihan(index) {
+        const wadah = document.getElementById('dashboardKepsek');
+        if(!index) { wadah.innerHTML = ""; return; }
+        
+        dataTerpilih = dataPengajuanKepsek[index];
+        
+        let cardHtml = `
+            <div class="guru-box">
+                <div class="guru-info">
+                    <h3>${dataTerpilih.namaGuru}</h3>
+                    <p style="font-size:13px; color:#64748b; font-weight:600; margin-top:4px;">Mata Pelajaran: ${dataTerpilih.mapel} | Kelas: ${dataTerpilih.kelas}</p>
+                    <p style="font-size:12px; color:#10b981; font-weight:bold; margin-top:4px;">Status: ${dataTerpilih.statusPengesahan}</p>
+                </div>
+                <div class="links-list">
+        `;
+
+        for(let i = 1; i <= 11; i++) {
+            let linkUrl = dataTerpilih["link" + i];
+            if(linkUrl && linkUrl.trim() !== "") {
+                cardHtml += `
+                    <div class="link-item">
+                        <div class="link-title">${namaPerangkat[i-1]}</div>
+                        <a href="${linkUrl}" class="btn-view" target="_blank"><i class="fa-solid fa-magnifying-glass"></i> Lihat Dokumen</a>
+                    </div>
+                `;
+            }
+        }
+
+        cardHtml += `
+                </div>
+                <button class="btn-submit-all" onclick="bukaModalTTD()">
+                    <i class="fa-solid fa-file-signature"></i> Bubuhkan Cap & Tanda Tangan Elektronik
+                </button>
+            </div>
+        `;
+        wadah.innerHTML = cardHtml;
+    }
+
+
+function kirimTtdKepsek() {
+  var stringBase64TtdKepsek = canvas.toDataURL("image/png"); // Mengambil coretan kanvas
+  
+  // DI SINI LETAKNYA: Sebelum fungsi google.script.run dipanggil
+  var dataDikirim = {
+    action: "eksekusiTtdKepsek",
+    namaGuru: namaGuruDipilih,
+    idBarisKepsek: idBarisKepsek,
+    idBarisGuruAsal: idBarisGuruAsal,
+    ttdKepsek: stringBase64TtdKepsek
+  };
+
+  // Dikirim ke backend (code.gs)
+  google.script.run.withSuccessHandler(sukses).doPost(JSON.stringify(dataDikirim));
+}
+
+ 
+ 
+    function bukaModalTTD() {
+        document.getElementById('modalTTD').style.display = 'flex';
+        canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+        ctx.lineWidth = 4; ctx.lineCap = "round"; ctx.strokeStyle = "#1e3a8a"; // Tinta TTD Biru Resmi Tua
+        
+        // Init Mouse Event
+        canvas.onmousedown = (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
+        canvas.onmousemove = (e) => { if(drawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
+        window.onmouseup = () => drawing = false;
+
+        // Touch Event Mobile
+        canvas.ontouchstart = (e) => { drawing = true; const p = dapatkanPosisiSentuh(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); };
+        canvas.ontouchmove = (e) => { if(!drawing) return; const p = dapatkanPosisiSentuh(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); };
+        canvas.ontouchend = () => drawing = false;
+    }
+
+    function dapatkanPosisiSentuh(e) {
+        const r = canvas.getBoundingClientRect();
+        return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top };
+    }
+
+    function prosesPasangCap(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.getElementById('cap-img');
+                img.src = event.target.result; 
+                img.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function bersihkanKanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    function tutupModalTTD() { document.getElementById('modalTTD').style.display = 'none'; document.getElementById('cap-img').style.display = 'none'; bersihkanKanvas(); }
+
+    function prosesSahkanDanKirim() {
+        if(!confirm("Apakah Anda yakin ingin mensahkan seluruh perangkat mengajar milik guru ini?")) return;
+        
+        document.getElementById('loading-kepsek').style.display = 'block';
+        tutupModalTTD();
+
+        // Gabungkan cap stempel dan TTD yang ada di dalam kanvas wrapper menjadi 1 kesatuan gambar base64
+        // Kita gambar cap stempel ke kanvas latar belakang terlebih dahulu jika ada
+        const capImg = document.getElementById('cap-img');
+        if(capImg.style.display === 'block') {
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width; tempCanvas.height = canvas.height;
+            const tempCtx = tempCanvas.getContext('2d');
+            
+            // Gambar cap stempel di posisi kiri
+            tempCtx.drawImage(capImg, 20, 25, 120, 120);
+            // Timpa dengan hasil coretan tangan tanda tangan Kepsek
+            tempCtx.drawImage(canvas, 0, 0);
+            
+            kirimKeServer(tempCanvas.toDataURL());
+        } else {
+            kirimKeServer(canvas.toDataURL());
+        }
+    }
+
+    function kirimKeServer(dataGambarHasilGabungan) {
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "eksekusiTtdKepsek",
+                namaGuru: dataTerpilih.namaGuru,
+                idBarisKepsek: dataTerpilih.idBarisKepsek,
+                idBarisGuruAsal: dataTerpilih.idBarisGuruAsal,
+                ttdKepsek: dataGambarHasilGabungan
+            })
+        })
+        .then(res => res.json())
+        .then(res => {
+            document.getElementById('loading-kepsek').style.display = 'none';
+            if(res.status === "success") {
+                alert("Selamat! Seluruh Dokumen Administrasi Guru Berhasil Disahkan & TTD Otomatis Terpasang.");
+                document.getElementById('dashboardKepsek').innerHTML = "";
+                ambilDataSheetKepsek();
+            } else {
+                alert("Gagal memproses: " + res.message);
+            }
+        });
+    }
+
+    window.onload = ambilDataSheetKepsek;
+</script>
+</body>
+</html>
